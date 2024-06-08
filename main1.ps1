@@ -48,6 +48,8 @@ try {
 
         $message = $reader.ReadLine()
         if ($message) {
+            # Replace /n with new lines before generating the response
+            $message = $message -replace '/n', [environment]::NewLine
             $response = Generate-Response -message $message
             $responseLines = $response -split [environment]::NewLine
             foreach ($line in $responseLines) {
