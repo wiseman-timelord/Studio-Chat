@@ -1,0 +1,4 @@
+{
+  "lm_studio_endpoint": "http://localhost:1234/v1/chat/completions",
+  "model_name": "Undi95/Llama-3-Unholy-8B"
+}
