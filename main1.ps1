@@ -1,10 +1,13 @@
-# Script: main1.ps1
+# main1.ps1
+
+# Import utility script
+. .\utility.ps1
 
 # Set window title
 $Host.UI.RawUI.WindowTitle = "StudioChat - Engine Window"
 
 # Load configuration
-$config = Get-Content -Raw -Path ".\config.json" | ConvertFrom-Json
+$config = Load-Config -configPath ".\config.json"
 
 $lm_studio_endpoint = $config.lm_studio_endpoint
 $model_name = $config.model_name
@@ -26,7 +29,7 @@ function Generate-Response {
         $response = Invoke-RestMethod -Uri $lm_studio_endpoint -Method Post -Body $payload -ContentType "application/json"
         Write-Host "Received response from LM Studio"
         # Properly handle multi-line content
-        return $response.choices[0].message.content -replace "`n", [environment]::NewLine
+        return Handle-MultiLineContent -content $response.choices[0].message.content
     } catch {
         Write-Host "Error communicating with LM Studio: $_"
         return 'Error: Could not reach LM Studio.'

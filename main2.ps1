@@ -1,10 +1,13 @@
-# Script: main2.ps1
+# main2.ps1
+
+# Import utility script
+. .\utility.ps1
 
 # Set window title
 $Host.UI.RawUI.WindowTitle = "StudioChat - Chat Window"
 
 # Load configuration
-$config = Get-Content -Raw -Path ".\config.json" | ConvertFrom-Json
+$config = Load-Config -configPath ".\config.json"
 
 $server_address = "localhost"
 $server_port = 12345
