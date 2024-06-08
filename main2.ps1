@@ -1,10 +1,17 @@
-# main2.ps1
-
 # Import utility script
 . .\utility.ps1
 
 # Set window title
 $Host.UI.RawUI.WindowTitle = "StudioChat - Chat Window"
+
+# Wait a moment to ensure the window is created
+Start-Sleep -Seconds 1
+
+# Find the window handle
+$windowHandle = (Get-Process -Id $PID).MainWindowHandle
+
+# Snap window to the right half of the screen
+Move-Window -WindowHandle $windowHandle -Right
 
 # Load configuration
 $config = Load-Config -configPath ".\config.json"
