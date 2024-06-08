@@ -3,13 +3,11 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 
 ### DEVELOPMENT NOTES..
 Early stages, it is limited. After upgrades below, there will be a review. The plan from here is...
-
-1. Multi-Line Input via re-formatting text inputted, ensuring to replace, blank lines and new lines with "/n", then inputting in one line.
-2. format of window should include borders, and re-draw, displaying, "current" and "recent" and "so-far", events, these will have to be consolidated by the model additionally.
-3. Prompt Sent to AI with insertion of consolidated interactions in, current and recent and so-far, sections.  
-4. 2 Windows need re-formatting to 2 halves of a widescreen.
-5. Some kind of model for Image Generation, then use playground mode on LM Studio.
-6. Requires to be created Window 3 for Graphics output, this can be based on description of "So-Far".
+1. format of window should include borders, and re-draw, displaying, "current" and "recent" and "so-far", events, these will have to be consolidated by the model additionally.
+2. Prompt Sent to AI with insertion of consolidated interactions in, current and recent and so-far, sections.  
+3. 2 Windows need re-formatting to 2 halves of a widescreen.
+4. Some kind of model for Image Generation, then use playground mode on LM Studio.
+5. Requires to be created Window 3 for Graphics output, this can be based on description of "So-Far".
 
 ## FEATURES:
 - 2 Windows, Engine and Chat, taking up 1/4 of a widescreen display, 1/2 total.
