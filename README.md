@@ -13,7 +13,7 @@ Early stages, it is limited. After upgrades below, there will be a review. The p
 
 ### Model News
 - Qwen-2 New model is beating Llam 3, and producing GPT4 quality output - https://www.youtube.com/watch?v=4vrK_LvMHNM , https://huggingface.co/models?sort=downloads&search=Qwen2+57b+gguf .
-- Noteworthy is a Llama 3 Instruct-Chat Merge in 20B Paramneters, weighing around 20GB, quite acceptable for multi-line output and input, but possibly filtered. This is the chat model StudioChat will be developed on - https://huggingface.co/AtakanTekparmak/llama-3-20b-instruct-Q8_0-GGUF/tree/main .
+- Noteworthy is a Llama 3 Instruct-Chat Merge in 20B Paramneters, weighing around 20GB, quite acceptable for multi-line output and input, but possibly filtered. This is the chat model StudioChat will be developed on currently - https://huggingface.co/AtakanTekparmak/llama-3-20b-instruct-Q8_0-GGUF/tree/main .
 
 ...
 
