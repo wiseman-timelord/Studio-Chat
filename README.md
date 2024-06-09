@@ -3,10 +3,11 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 
 ### DEVELOPMENT NOTES..
 Early stages, it is limited. After upgrades below, there will be a review. The plan from here is...
-1. format of main2 should include borders and separators, and re-draw, displaying, "current" and "recent" and "so-far", events, these will have to be consolidated by the model additionally.
-2. Prompt Sent to AI with insertion of consolidated interactions in, current and recent and so-far, sections.  
-3. Some kind of model for Image Generation, then use playground mode on LM Studio.
-4. Requires to be created Window 3 for Graphics output, this can be based on description of "So-Far".
+1. Check multi-line feature. code going in should be 1 line where \n would indicate next line, and the user can press shift+enter to go on to next line, output likewise should be multi-line.
+2. format of main2 should include a dynamic page, that is redrawn after each response from the model, it should display, "current" and "previously" and "so-far", events, these will have to be consolidated by the model additionally.
+3. "previously" and "so-far", then need to be added to dynamic Prompts, that will be Sent to AI, so that the AI responds with context.  
+4. Some kind of model for Image Generation, then use playground mode on LM Studio, and make main 1 take up quarter display, then add a new window taking up quarter screen for Graphics output, this should be based on "previously".
+5. when the user chooses to exit, then this could produce option to produce summary image or just exit, image generated would use "So-Far".
 
 ### RESEARCH..
 - Useful Models; https://huggingface.co/models?sort=trending&search=LLama-3-8b-Uncensored+gguf , one from here should be unfiltered. Going to use this one for now, it swore at me multiple times in the first input, just asking if it had a horse, its a good sign >_> - https://huggingface.co/mradermacher/Uncensored-Frank-Llama-3-8B-GGUF/blob/main/Uncensored-Frank-Llama-3-8B.Q6_K.gguf .
