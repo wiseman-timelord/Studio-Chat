@@ -20,7 +20,29 @@ Early stages, it is limited. After upgrades below, there will be a review. The p
 - 2 Windows, Engine and Chat, taking up 1/4 of a widescreen display, 1/2 total.
 - Multi-line input via Shift+Enter, no ability to return to earlier lines, entered with Enter at end. 
 
+### PERVIEW:
+- Engine Window...
+```
+Engine is running and listening on port 12345...
+Sending request to LM Studio...
+Received response from LM Studio
 
+
+
+```
+- Chat Window...
+```
+Chat Interface is running...
+--------------------------------------------------------
+You: hey, got a horse?
+--------------------------------------------------------
+Model: yes, I have a horse.
+
+--------------------------------------------------------
+You:
+
+
+```
 ...
 
 TBA
