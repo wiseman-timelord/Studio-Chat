@@ -8,6 +8,8 @@ Early stages, it is limited. After upgrades below, there will be a review. The p
 3. "previously" and "so-far", then need to be added to dynamic Prompts, that will be Sent to AI, so that the AI responds with context.  
 4. Some kind of model for Image Generation, then use playground mode on LM Studio, and make main 1 take up quarter display, then add a new window taking up quarter screen for Graphics output, this should be based on "previously".
 5. when the user chooses to exit, then this could produce option to produce summary image or just exit, image generated would use "So-Far".
+6. Need a ".\scripts" folder.
+7. Need a ".ENV" file for which model(s) to use and username, and such..
 6. This project will just be a better version of the llama 2 style chatbot I made for WSL, for proof of a AI on powershell/lm studio concept. But, do I make a, adventure game or agent/assitant or personal manager, out of it, what is the next stage after project completion??
 
 ### RESEARCH..
