@@ -1,53 +1,29 @@
-# Import utility script
+# main1.ps1
+
+
+# Load utility functions
 . .\utility.ps1
-
-# Set window title
-$Host.UI.RawUI.WindowTitle = "StudioChat - Engine Window"
-
-# Wait a moment to ensure the window is created
 Start-Sleep -Seconds 1
 
-# Find the window handle
+# Configure Window
+$Host.UI.RawUI.WindowTitle = "StudioChat - Engine Window"
 $windowHandle = (Get-Process -Id $PID).MainWindowHandle
-
-# Snap window to the left half of the screen
 Move-Window -WindowHandle $windowHandle -Left
 
 # Load configuration
-$config = Load-Config -configPath ".\config.json"
+$config = Load-Configuration
 
 $lm_studio_endpoint = $config.lm_studio_endpoint
 $model_name = $config.model_name
-$server_port = 12345
-
-# Function to generate response from LM Studio
-function Generate-Response {
-    param (
-        [string]$message
-    )
-
-    $payload = @{
-        model = $model_name
-        messages = @(@{ role = "user"; content = $message })
-    } | ConvertTo-Json
-
-    try {
-        Write-Host "Sending request to LM Studio..."
-        $response = Invoke-RestMethod -Uri $lm_studio_endpoint -Method Post -Body $payload -ContentType "application/json"
-        Write-Host "Received response from LM Studio"
-        # Properly handle multi-line content
-        return Handle-MultiLineContent -content $response.choices[0].message.content
-    } catch {
-        Write-Host "Error communicating with LM Studio: $_"
-        return 'Error: Could not reach LM Studio.'
-    }
-}
+$server_port = $config.script_comm_port
 
 # Start TCP server
 $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any, $server_port)
 $listener.Start()
-Write-Host "Engine is running and listening on port $server_port..."
 
+# Entry Point
+Write-Host "...Engine Initialized."
+Write-Separator
 try {
     while ($true) {
         $client = $listener.AcceptTcpClient()
@@ -58,9 +34,7 @@ try {
 
         $message = $reader.ReadLine()
         if ($message) {
-            # Replace /n with new lines before generating the response
-            $message = $message -replace '/n', [environment]::NewLine
-            $response = Generate-Response -message $message
+            $response = Generate-Response -message $message -lm_studio_endpoint $lm_studio_endpoint -model_name $model_name
             $responseLines = $response -split [environment]::NewLine
             foreach ($line in $responseLines) {
                 $writer.WriteLine($line)

@@ -1,4 +1,5 @@
 {
   "lm_studio_endpoint": "http://localhost:1234/v1/chat/completions",
-  "model_name": "AtakanTekparmak/llama-3-20b-instruct-Q8_0-GGUF"
+  "model_name": "Undi95/Llama-3-Unholy-8B",
+  "script_comm_port": 12345
 }

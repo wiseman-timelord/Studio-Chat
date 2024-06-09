@@ -1,72 +1,28 @@
-# Import utility script
+# main2.ps1
+
+
+# Load utility functions
 . .\utility.ps1
-
-# Set window title
-$Host.UI.RawUI.WindowTitle = "StudioChat - Chat Window"
-
-# Wait a moment to ensure the window is created
 Start-Sleep -Seconds 1
 
-# Find the window handle
+# Configure Window
+$Host.UI.RawUI.WindowTitle = "StudioChat - Chat Window"
 $windowHandle = (Get-Process -Id $PID).MainWindowHandle
-
-# Snap window to the right half of the screen
 Move-Window -WindowHandle $windowHandle -Right
 
 # Load configuration
-$config = Load-Config -configPath ".\config.json"
-
+$config = Load-Configuration
 $server_address = "localhost"
-$server_port = 12345
+$server_port = $config.script_comm_port
 
-Add-Type @"
-    using System;
-    using System.Runtime.InteropServices;
-
-    public class Interop {
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetAsyncKeyState(int vKey);
-    }
-"@
-
-function Get-MultiLineInput {
-    $input = ""
-    while ($true) {
-        $key = $Host.UI.RawUI.ReadKey("IncludeKeyDown,NoEcho")
-
-        if ($key.VirtualKeyCode -eq 13) { # Enter key
-            if ([Interop]::GetAsyncKeyState(16)) { # Shift key
-                $input += "`n"
-                Write-Host "`n" -NoNewline
-            } else {
-                break
-            }
-        } elseif ($key.VirtualKeyCode -eq 8) { # Backspace key
-            if ($input.Length -gt 0) {
-                $input = $input.Substring(0, $input.Length - 1)
-                Write-Host "`b `b" -NoNewline
-            }
-        } else {
-            $input += $key.Character
-            Write-Host $key.Character -NoNewline
-        }
-    }
-    return $input
-}
-
-Write-Host "Chat Interface is running..."
-
+# Entry Point
+Write-Host "...Chat Initialized."
 while ($true) {
-    Write-Host "--------------------------------------------------------"
-    Write-Host "You: " -NoNewline
-    $user_input = Get-MultiLineInput
+    Write-Separator
+    $user_input = Read-Host "You"
     if ($user_input -in @('exit', 'quit')) {
         break
     }
-
-    # Replace new lines with /n in user input
-    $formatted_input = $user_input -replace "`n", '/n'
 
     try {
         $client = [System.Net.Sockets.TcpClient]::new($server_address, $server_port)
@@ -75,8 +31,7 @@ while ($true) {
         $writer = [System.IO.StreamWriter]::new($stream)
         $writer.AutoFlush = $true
 
-        $writer.WriteLine($formatted_input)
-
+        $writer.WriteLine($user_input)
         $response = ""
         while ($true) {
             $line = $reader.ReadLine()
@@ -92,7 +47,7 @@ while ($true) {
             }
             $response = [string]::Join([environment]::NewLine, $responseLines)
 
-            Write-Host "--------------------------------------------------------"
+            Write-Separator
             Write-Host "Model: $response"
         }
 
@@ -102,4 +57,4 @@ while ($true) {
     }
 }
 
-Write-Host "Chat Interface closed."
+Write-Host "Chat window closed."

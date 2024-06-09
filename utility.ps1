@@ -1,15 +1,16 @@
-function Load-Config {
-    param (
-        [string]$configPath
-    )
-    return Get-Content -Raw -Path $configPath | ConvertFrom-Json
+# Utility script for shared functions
+
+# Artwork
+function Write-Separator {
+    Write-Host "`n--------------------------------------------------------`n"
 }
 
-function Handle-MultiLineContent {
+# Load configuration
+function Load-Configuration {
     param (
-        [string]$content
+        [string]$configPath = ".\config.json"
     )
-    return $content -replace "`n", [environment]::NewLine
+    return Get-Content -Raw -Path $configPath | ConvertFrom-Json
 }
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -66,4 +67,29 @@ function Move-Window {
 
     # Move and resize the window
     [pInvoke]::MoveWindow($WindowHandle, $x, $y, [int]$width, [int]$height, $true) | Out-Null
+}
+
+
+# Function to generate response from LM Studio
+function Generate-Response {
+    param (
+        [string]$message,
+        [string]$lm_studio_endpoint,
+        [string]$model_name
+    )
+
+    $payload = @{
+        model = $model_name
+        messages = @(@{ role = "user"; content = $message })
+    } | ConvertTo-Json
+
+    try {
+        Write-Host "Sending request to LM Studio..."
+        $response = Invoke-RestMethod -Uri $lm_studio_endpoint -Method Post -Body $payload -ContentType "application/json"
+        Write-Host "Received response from LM Studio"
+        return $response.choices[0].message.content -replace "`n", [environment]::NewLine
+    } catch {
+        Write-Host "Error communicating with LM Studio: $_"
+        return 'Error: Could not reach LM Studio.'
+    }
 }
