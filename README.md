@@ -26,7 +26,7 @@ Early stages, it is limited. After upgrades below, there will be a review. The p
 - Multi-OS Mac/Linux/Windows compatibility thanks to, PS Core and LM Studio.
 - GPU/CPU interference, and many other great features due to LM Studio.
 
-### PERVIEW:
+### PREVIEW:
 - Engine Window...
 ```
 ...Engine Initialized.
