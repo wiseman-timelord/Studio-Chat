@@ -85,4 +85,4 @@ You: Hmm, probably the prompts need implementing, or the model changing..
 3. Run the launcher "StudioChat.Bat".
 
 ## DISCLAIMER:
-TBA
+This software is subject to the terms in License.Txt, covering usage, distribution, and modifications. For full details on your rights and obligations, refer to License.Txt.
