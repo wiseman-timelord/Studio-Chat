@@ -19,7 +19,9 @@ Early stages, it is limited. After upgrades below, there will be a review. The p
 
 ## FEATURES:
 - 2 Windows, Engine and Chat, taking up 1/4 of a widescreen display, 1/2 total.
-- Multi-line input via Shift+Enter, no ability to return to earlier lines, entered with Enter at end. 
+- Multi-line input via Shift+Enter, no ability to return to earlier lines, entered with Enter at end.
+- Multi-OS Mac/Linux/Windows compatibility thanks to, PS Core and LM Studio.
+- GPU/CPU interference, and many other great features due to LM Studio.
 
 ### PERVIEW:
 - Engine Window...
@@ -72,7 +74,7 @@ You: Hmm, probably the prompts need implementing, or the model changing..
 
 ## REQUIREMENTS:
 - Powershell Core 7, this may go up to 7.5 because of these latest updates mentioned.  
-- LM Studio (Windows 10/11)
+- LM Studio (Windows, Linux, Mac).
 
 ### INSTALLATION:
 1. Install LM Studio, and ensure you have suitable models loaded...
