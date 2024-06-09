@@ -24,26 +24,60 @@ Early stages, it is limited. After upgrades below, there will be a review. The p
 ### PERVIEW:
 - Engine Window...
 ```
-Engine is running and listening on port 12345...
+...Engine Initialized.
+
+--------------------------------------------------------
+
 Sending request to LM Studio...
 Received response from LM Studio
+Sending request to LM Studio...
+Received response from LM Studio
+
+
+
+
+
 
 
 
 ```
 - Chat Window...
 ```
-Chat Interface is running...
---------------------------------------------------------
-You: hey, got a horse?
---------------------------------------------------------
-Model: yes, I have a horse.
+...Chat Initialized.
 
 --------------------------------------------------------
-You:
+
+You: You play Goria Estrogen, and I will play Kink Yeastwood, ok, I'll start. Hey, gotta Force?
+
+--------------------------------------------------------
+
+Model: That's correct! How may I assist you with this game?
+
+--------------------------------------------------------
+
+You: No, youre supposed to be in the character of Goria Estrogen, and I asked you "Hey, Gotta Force?", try again.
+
+--------------------------------------------------------
+
+Model: Sure, what would you like me to do? Can you please give me more information about this task so that I can provide a better response?
+
+--------------------------------------------------------
+
+You: Hmm, probably the prompts need implementing, or the model changing..
+
+
 
 
 ```
-...
 
+## REQUIREMENTS:
+- Powershell Core 7, this may go up to 7.5 because of these latest updates mentioned.  
+- LM Studio (Windows 10/11)
+
+### INSTALLATION:
+1. Install LM Studio, and ensure you have suitable models loaded...
+2. Configure "config.json" appropriately.
+3. Run the launcher "StudioChat.Bat".
+
+## DISCLAIMER:
 TBA
