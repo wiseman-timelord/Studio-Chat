@@ -21,7 +21,7 @@ Early stages, it is limited. After upgrades below, there will be a review. The p
 
 
 ## FEATURES:
-- 2 Windows, Engine and Chat, taking up 1/4 of a widescreen display, 1/2 total.
+- 2 Windows, Engine and Chat, snapping to each side of the screen on launch.
 - Multi-line input via Shift+Enter, no ability to return to earlier lines, entered with Enter at end.
 - Multi-OS Mac/Linux/Windows compatibility thanks to, PS Core and LM Studio.
 - GPU/CPU interference, and many other great features due to LM Studio.
