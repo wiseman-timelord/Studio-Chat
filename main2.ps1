@@ -19,22 +19,28 @@ $server_port = $config.script_comm_port
 function Draw-ChatInterface {
     param (
         [hashtable]$config,
-        [hashtable]$response
+        [hashtable]$response,
+        [int]$stage
     )
 
     Clear-Host
     Write-DualSeparator
     Write-Host "$($config.human_name):"
-    Write-Host "$($response.human_current)"
+    if ($stage -ge 2 -or $response.human_current) {
+        Write-Host "$($response.human_current)"
+    } else {
+        Write-Host ""
+    }
     Write-Separator
     Write-Host "$($config.ai_npc_name):"
-    Write-Host "$($response.ai_npc_current)"
-    Write-DualSeparator
-
-    if (-not $response.human_current) {
-        Write-Host "Your Input (Back=B): " -NoNewline
+    if ($stage -eq 3 -or $response.ai_npc_current) {
+        Write-Host "$($response.ai_npc_current)"
+    } else {
+        Write-Host ""
     }
+    Write-DualSeparator
 }
+
 
 # Function to start chatting
 function Start-Chatting {
@@ -51,8 +57,9 @@ function Start-Chatting {
 
     while ($true) {
         $response = Load-Response
-        Draw-ChatInterface -config $config -response $response
+        Draw-ChatInterface -config $config -response $response -stage 1
 
+        Write-Host "Your Input (Back=B): " -NoNewline
         $user_input = Read-Host
         if ($user_input -in @('B', 'b')) {
             break
@@ -63,6 +70,8 @@ function Start-Chatting {
         }
 
         Update-Response -key "human_current" -value $user_input
+        $response = Load-Response
+        Draw-ChatInterface -config $config -response $response -stage 2
 
         try {
             $client = [System.Net.Sockets.TcpClient]::new($server_address, $server_port)
@@ -101,9 +110,11 @@ function Start-Chatting {
                 $responseText = [string]::Join([environment]::NewLine, $responseLines)
 
                 Update-Response -key "ai_npc_current" -value $responseText
-
                 $response = Load-Response
-                Draw-ChatInterface -config $config -response $response
+                Draw-ChatInterface -config $config -response $response -stage 3
+
+                # Prompt for next user input
+                Write-Host "Your Input (Back=B): " -NoNewline
             }
 
             $client.Close()
@@ -113,6 +124,7 @@ function Start-Chatting {
     }
     Write-Host "Chat window closed."
 }
+
 
 # Main logic
 Start-Sleep -Seconds 1
