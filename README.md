@@ -3,13 +3,17 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 
 ### DEVELOPMENT NOTES..
 Early stages, it is limited. After upgrades below, there will be a review. The plan from here is...
-1. expand "response.json" to include keys, "previously" and "so-far", then need to be added to dynamic Prompts, requiring new prompts for consolidation into, "previously" and "so-far", contents, so as to produce context & history. 
+1. expand "response.json" to include "previously", then need to be added to dynamic Prompts, requiring new prompts for consolidation into, "previously" contents, so as to produce context in prompt. 
 - This will require new keys, "human_previous" and "ai_npc_previous" and "recent_events".
 - When the user produces input then the previous inputs from, "human_current" and "ai_npc_current", will be rotated to relevantly, "human_previous" and "ai_npc_previous", before the input from the user is then added to "human_current".
 - each time there is a rotation, then an additional prompt will have to be sent to the model, that instructs the model to use, the values of, "human_previous" and "ai_npc_previous", to generate a summary of the 2 inputs, hence creating a sentence describing the interaction, this is saved to "recent_events".
 - "{recent_events}" requires to be added to the previously existing prompt for basic conversation, so that the model has the context of the recent events, when it produces its response.
-2. Some kind of model for Image Generation, then use playground mode on LM Studio, and make main 1 take up quarter display, then add a new window taking up quarter screen for Graphics output, this should be based on "previously".
-3. when the user chooses to exit, then this could produce option to produce summary image or just exit, image generated would use "So-Far".
+2. expand "response.json" to include "history", then need to be added to dynamic Prompts, requiring new prompts for consolidation into, "history" contents, so as to produce context in prompt. 
+- This will require new keys, "scenario_history".
+- each time there is a rotation, then an additional prompt will have to be sent to the model, that instructs the model to use, the values of, "recent_events" and "scenario_history", to consolidate the recent events into history, hence creating a concise history for all events so far in a paragraph, this is saved to "scenario_history".
+- "{scenario_history}" requires to then be added to the previously existing prompt for basic conversation, so that the model has the context of the scenario's history, when it produces its response.
+3. Some kind of model for Image Generation, then use playground mode on LM Studio, and make main 1 take up quarter display, then add a new window taking up quarter screen for Graphics output, this should be based on "previously".
+4. when the user chooses to exit, then this could produce option to produce summary image or just exit, image generated would use "So-Far".
 
 ### RESEARCH..
 - Useful Models; https://huggingface.co/models?sort=trending&search=LLama-3-8b-Uncensored+gguf , one from here should be unfiltered. Going to use this one for now, it swore at me multiple times in the first input, just asking if it had a horse, its a good sign >_> - https://huggingface.co/mradermacher/Uncensored-Frank-Llama-3-8B-GGUF/blob/main/Uncensored-Frank-Llama-3-8B.Q6_K.gguf . There are no normal Llama 3 Chat Uncensored 8B GGUF currently, which is strange.
