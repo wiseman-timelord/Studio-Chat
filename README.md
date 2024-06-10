@@ -3,15 +3,7 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 
 ### DEVELOPMENT NOTES..
 Early stages, it is limited. After upgrades below, there will be a review. The plan from here is...
-1. expand "response.json" to include "previously", then need to be added to dynamic Prompts, requiring new prompts for consolidation into, "previously" contents, so as to produce context in prompt. 
-- This will require new keys, "human_previous" and "ai_npc_previous" and "recent_events".
-- When the user produces input then the previous inputs from, "human_current" and "ai_npc_current", will be rotated to relevantly, "human_previous" and "ai_npc_previous", before the input from the user is then added to "human_current".
-- each time there is a rotation, then an additional prompt will have to be sent to the model, that instructs the model to use, the values of, "human_previous" and "ai_npc_previous", to generate a summary of the 2 inputs, hence creating a sentence describing the interaction, this is saved to "recent_events".
-- "{recent_events}" requires to be added to the previously existing prompt for basic conversation, so that the model has the context of the recent events, when it produces its response.
-2. expand "response.json" to include "history", then need to be added to dynamic Prompts, requiring new prompts for consolidation into, "history" contents, so as to produce context in prompt. 
-- This will require new keys, "scenario_history".
-- each time there is a rotation, then an additional prompt will have to be sent to the model, that instructs the model to use, the values of, "recent_events" and "scenario_history", to consolidate the recent events into history, hence creating a concise history for all events so far in a paragraph, this is saved to "scenario_history".
-- "{scenario_history}" requires to then be added to the previously existing prompt for basic conversation, so that the model has the context of the scenario's history, when it produces its response.
+1. TODAY, CONTEXTUAL AWARENESS!
 3. Some kind of model for Image Generation, then use playground mode on LM Studio, then add a new graphical window taking up quarter screen for Graphics output, this should be based on "recent_events".
 4. In theory, there could be some kind of text generated world map in a new window taking up a quarter of the screen, the player will there have options of locations to go to, the npc could be randomised based on the theme of the location, the user can at any point travel elsewhere, to meet a different person at the other location, or even at most of the locations there would be no people, so as for the user to have to search around for people. 
 5. In theory, scenario_history would be able to be consolidated into "total_history" for all locations in the gaming session, and total_history could be used to customize future scenarios, so that they are themed towards what the player wants to find, hence the game could adapt towards what kinds of, scenarios and characters, preferred by the player, therein creating a theme of world, maybe, these themes could be saved or persistent until new game, enabling a continue option if there is history for it?? 
