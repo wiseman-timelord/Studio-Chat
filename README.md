@@ -23,48 +23,36 @@ Early stages, it is limited. After upgrades below, there will be a review. The p
 - GPU/CPU interference, and many other great features due to LM Studio.
 
 ### PREVIEW:
-- Engine Window...
+- Engine Window (functional)...
 ```
-...Engine Initialized.
 
 --------------------------------------------------------
 
+Engine Initialized.
+Loading menu.
 Sending request to LM Studio...
 Received response from LM Studio
-Sending request to LM Studio...
-Received response from LM Studio
-
-
-
-
-
 
 
 
 ```
-- Chat Window...
+- Chat Window (no context yet)...
 ```
-...Chat Initialized.
+
+========================================================
+
+Human:
+Hey Wise-Llama, do you have any wise insights for me today?
 
 --------------------------------------------------------
 
-You: You play Goria Estrogen, and I will play Kink Yeastwood, ok, I'll start. Hey, gotta Force?
+Wise-Llama:
+"Of course, my friend! Let's embark on a journey of self-discovery together, starting with the question: How might we cultivate inner peace amidst life's storms?" Wise-Lama suggests as he hands Human an inspirational quote to ponder over, sharing his wisdom with grace and sincerity.
 
---------------------------------------------------------
 
-Model: That's correct! How may I assist you with this game?
+========================================================
 
---------------------------------------------------------
-
-You: No, youre supposed to be in the character of Goria Estrogen, and I asked you "Hey, Gotta Force?", try again.
-
---------------------------------------------------------
-
-Model: Sure, what would you like me to do? Can you please give me more information about this task so that I can provide a better response?
-
---------------------------------------------------------
-
-You: Hmm, probably the prompts need implementing, or the model changing..
+Your Input (Back=B):
 
 
 
