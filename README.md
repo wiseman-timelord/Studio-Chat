@@ -60,13 +60,14 @@ Your Input (Back=B):
 ```
 
 ## REQUIREMENTS:
-- Powershell Core 7, this may go up to 7.5 because of these latest updates mentioned.  
+- Powershell Core 7, may specify 7.5 later, 7.5 is interesting..  
 - LM Studio (Windows, Linux, Mac).
 
 ### INSTALLATION:
 1. Install LM Studio, and ensure you have suitable models loaded...
-2. Configure "config.json" appropriately.
-3. Run the launcher "StudioChat.Bat".
+2. Extract StudioChat to a suitable folder, for example, `D:\Programs\StudioChat`.
+3. Run the launcher "StudioChat.Bat", configure settings in menu.
+4. Start the Chat interaction, input `b` to return to the menu.
 
 ## NOTES:
 - This project is intended a better version of the llama 2 style chatbot I made for WSL, for proof of a AI on powershell/lm studio concept; but when its done, do I make a, adventure game or agent/assitant or personal manager, out of it, what is the next stage after project completion??
