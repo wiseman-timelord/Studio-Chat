@@ -7,23 +7,23 @@ cd /d %~dp0
 echo ========( StudioChat )========
 color 80
 echo.
-echo Batch Initialized...
-timeout /t 2 /nobreak >nul
+echo Batch Initialized.
 echo.
+timeout /t 2 /nobreak >nul
 
 :: Launch Program
-echo Running StudioChat...
+echo Running StudioChat..
 timeout /t 1 /nobreak >nul
 start pwsh -NoExit -File .\main1.ps1
 timeout /t 1 /nobreak >nul
 start pwsh -NoExit -File .\main2.ps1
-echo ...StudioChat Exited.
 timeout /t 1 /nobreak >nul
+echo ..StudioChat Executed.
 goto Exit
 
 :: Exit Launcher
 :Exit
 echo.
-echo ...Exit Process Initiated.
+echo Exititing Batch.
 echo.
 timeout /t 5 /nobreak >nul
