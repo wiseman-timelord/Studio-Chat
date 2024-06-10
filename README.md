@@ -3,14 +3,10 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 
 ### DEVELOPMENT NOTES..
 Early stages, it is limited. After upgrades below, there will be a review. The plan from here is...
-1. Check multi-line feature. code going in should be 1 line where \n would indicate next line, and the user can press shift+enter to go on to next line, output likewise should be multi-line.
-2. format of main2 should include a dynamic page, that is redrawn after each response from the model, it should display, "current" and "previously" and "so-far", events, these will have to be consolidated by the model additionally.
-3. "previously" and "so-far", then need to be added to dynamic Prompts, that will be Sent to AI, so that the AI responds with context.  
-4. Some kind of model for Image Generation, then use playground mode on LM Studio, and make main 1 take up quarter display, then add a new window taking up quarter screen for Graphics output, this should be based on "previously".
-5. when the user chooses to exit, then this could produce option to produce summary image or just exit, image generated would use "So-Far".
-6. Need a ".\scripts" folder.
-7. Need a ".ENV" file for which model(s) to use and username, and such, or otherwise a standalone configurator script.
-6. This project will just be a better version of the llama 2 style chatbot I made for WSL, for proof of a AI on powershell/lm studio concept. But, do I make a, adventure game or agent/assitant or personal manager, out of it, what is the next stage after project completion??
+1. Refractor script locations, there are now 9 scripts, namely we need, ".\data" and ".\scripts"; super easy with powershell.
+2. expand "response.json" to include keys, "previously" and "so-far", then need to be added to dynamic Prompts, requiring new prompts for consolidation into, "previously" and "so-far", contents, so as to produce context & history.  
+3. Some kind of model for Image Generation, then use playground mode on LM Studio, and make main 1 take up quarter display, then add a new window taking up quarter screen for Graphics output, this should be based on "previously".
+4. when the user chooses to exit, then this could produce option to produce summary image or just exit, image generated would use "So-Far".
 
 ### RESEARCH..
 - Useful Models; https://huggingface.co/models?sort=trending&search=LLama-3-8b-Uncensored+gguf , one from here should be unfiltered. Going to use this one for now, it swore at me multiple times in the first input, just asking if it had a horse, its a good sign >_> - https://huggingface.co/mradermacher/Uncensored-Frank-Llama-3-8B-GGUF/blob/main/Uncensored-Frank-Llama-3-8B.Q6_K.gguf . There are no normal Llama 3 Chat Uncensored 8B GGUF currently, which is strange.
@@ -83,6 +79,9 @@ You: Hmm, probably the prompts need implementing, or the model changing..
 1. Install LM Studio, and ensure you have suitable models loaded...
 2. Configure "config.json" appropriately.
 3. Run the launcher "StudioChat.Bat".
+
+## NOTES:
+- This project is intended a better version of the llama 2 style chatbot I made for WSL, for proof of a AI on powershell/lm studio concept; but when its done, do I make a, adventure game or agent/assitant or personal manager, out of it, what is the next stage after project completion??
 
 ## DISCLAIMER:
 This software is subject to the terms in License.Txt, covering usage, distribution, and modifications. For full details on your rights and obligations, refer to License.Txt.
