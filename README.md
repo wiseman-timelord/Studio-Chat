@@ -24,7 +24,7 @@ Early stages, it is limited. After upgrades below, there will be a review. The p
 - GPU/CPU interference, and many other great features due to LM Studio.
 
 ### PREVIEW:
-- Engine Window (functional)...
+- Engine Window (requires update)...
 ```
 
 --------------------------------------------------------
@@ -37,26 +37,32 @@ Received response from LM Studio
 
 
 ```
-- Chat Window (no context yet)...
+- Chat Window...
 ```
 
 ========================================================
 
 Human:
-Hey Wise-Llama, do you have any wise insights for me today?
+Human met with Wise-Llama.
 
 --------------------------------------------------------
 
 Wise-Llama:
-"Of course, my friend! Let's embark on a journey of self-discovery together, starting with the question: How might we cultivate inner peace amidst life's storms?" Wise-Lama suggests as he hands Human an inspirational quote to ponder over, sharing his wisdom with grace and sincerity.
+Wise-Llama met with Human.
 
+--------------------------------------------------------
+
+Recent Events:
+Human and Wise-Llama noticed each other.
+
+--------------------------------------------------------
+
+Scenario History:
+The roleplay started.
 
 ========================================================
 
 Your Input (Back=B):
-
-
-
 
 ```
 
