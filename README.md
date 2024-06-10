@@ -3,11 +3,9 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 
 ### DEVELOPMENT NOTES..
 Early stages, it is limited. After upgrades below, there will be a review. The plan from here is...
-1. Refractor script locations, there are now 9 scripts, namely we need, ".\data" and ".\scripts"; super easy with powershell.
-2. windows should snap to upper-left/lower-left of screen; half screens is wastage, and there will be the graphics window later.
-2. expand "response.json" to include keys, "previously" and "so-far", then need to be added to dynamic Prompts, requiring new prompts for consolidation into, "previously" and "so-far", contents, so as to produce context & history.  
-3. Some kind of model for Image Generation, then use playground mode on LM Studio, and make main 1 take up quarter display, then add a new window taking up quarter screen for Graphics output, this should be based on "previously".
-4. when the user chooses to exit, then this could produce option to produce summary image or just exit, image generated would use "So-Far".
+1. expand "response.json" to include keys, "previously" and "so-far", then need to be added to dynamic Prompts, requiring new prompts for consolidation into, "previously" and "so-far", contents, so as to produce context & history.  
+2. Some kind of model for Image Generation, then use playground mode on LM Studio, and make main 1 take up quarter display, then add a new window taking up quarter screen for Graphics output, this should be based on "previously".
+3. when the user chooses to exit, then this could produce option to produce summary image or just exit, image generated would use "So-Far".
 
 ### RESEARCH..
 - Useful Models; https://huggingface.co/models?sort=trending&search=LLama-3-8b-Uncensored+gguf , one from here should be unfiltered. Going to use this one for now, it swore at me multiple times in the first input, just asking if it had a horse, its a good sign >_> - https://huggingface.co/mradermacher/Uncensored-Frank-Llama-3-8B-GGUF/blob/main/Uncensored-Frank-Llama-3-8B.Q6_K.gguf . There are no normal Llama 3 Chat Uncensored 8B GGUF currently, which is strange.
