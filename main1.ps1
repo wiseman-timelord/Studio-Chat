@@ -1,16 +1,16 @@
 # main1.ps1 - script for "Engine Window".
 
 # Load utility functions
-. .\utility.ps1
+. .\scripts\utility.ps1
 Start-Sleep -Seconds 1
 
 # Configure Window
 $Host.UI.RawUI.WindowTitle = "StudioChat - Engine Window"
 $windowHandle = (Get-Process -Id $PID).MainWindowHandle
-Move-Window -WindowHandle $windowHandle -Left
+Move-Window -WindowHandle $windowHandle -BottomLeft
 
 # Load configuration
-$config = Load-Configuration
+$config = Load-Configuration -configPath ".\data\config.json"
 
 $lm_studio_endpoint = $config.lm_studio_endpoint
 $model_name = $config.model_name
@@ -62,7 +62,7 @@ try {
                 break
             }
 
-            $response = Load-Response
+            $response = Load-Response -responsePath ".\data\response.json"
             $prompt = Create-Prompt -config $config -response $response
             $model_response = Generate-Response -message $prompt -lm_studio_endpoint $lm_studio_endpoint -model_name $model_name
 

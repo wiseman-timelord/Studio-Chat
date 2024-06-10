@@ -1,17 +1,17 @@
 # main2.ps1 - script for "Chat Window".
 
 # Load utility functions and menu functions
-. .\utility.ps1
-. .\menus.ps1
+. .\scripts\utility.ps1
+. .\scripts\menus.ps1
 Start-Sleep -Seconds 1
 
 # Configure Window
 $Host.UI.RawUI.WindowTitle = "StudioChat - Chat Window"
 $windowHandle = (Get-Process -Id $PID).MainWindowHandle
-Move-Window -WindowHandle $windowHandle -Right
+Move-Window -WindowHandle $windowHandle -TopLeft
 
 # Load configuration
-$config = Load-Configuration
+$config = Load-Configuration -configPath ".\data\config.json"
 $server_address = "localhost"
 $server_port = $config.script_comm_port
 
@@ -110,7 +110,7 @@ function Start-Chatting {
                 $responseText = [string]::Join([environment]::NewLine, $responseLines)
 
                 Update-Response -key "ai_npc_current" -value $responseText
-                $response = Load-Response
+                $response = Load-Response -responsePath ".\data\response.json"
                 Draw-ChatInterface -config $config -response $response -stage 3
 
                 # Prompt for next user input
