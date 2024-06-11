@@ -31,19 +31,22 @@ Early stages, it is limited. After upgrades below, there will be a review. The p
 
 Engine Initialized.
 Loading menu.
+Loaded: .\data\config.json
+Accessed: Main Menu
+Selected: Start Chatting
+Loaded: .\data\response.json
 Sending request to LM Studio...
-Prompt: INFORMATION:\nThe location is a Mountain, where, Wise-Llama and Wanderer, are present. Recently Wanderer and Wise-Llama noticed each other., and just now Wanderer said 'Hello Llama, fancy seeing you up here!' to Wise-Llama.\nINSTRUCTION:\nYou are functioning in the role of a Ai Roleplay; 1. Your task is to respond as Wise-Llama to the communication from Wanderer in one sentence involving appropriate, a short dialogue produced and a single action taken, by Wise-Llama.\nEXAMPLE OUTPUT:\nai_npc_current: '"I'm delighted to see you here, it's quite an unexpected pleasure!", Wise-Llama says as he offers a warm smile to Wanderer'.
+Payload: "INFORMATION:\\nThe location is a Mountain, where, Wise-Llama and Wanderer, are present. Recently Wanderer and Wise-Llama noticed each other., and just now Wanderer said 'Hello Wise-Llama, hows your day going, found any nice shrubs?' to Wise-Llama.\\nINSTRUCTION:\\nYou are functioning in the role of Ai Roleplay; Your task is, to respond as Wise-Llama to the communication from Wanderer, in one sentence involving an appropriate, short dialogue produced and single action taken, by Wise-Llama.\\nEXAMPLE OUTPUT:\\nai_npc_current: '\"I'm delighted to see you here, it's quite an unexpected pleasure!\", Wise-Llama says as they offer a warm smile to Wanderer'."
 Sending request to LM Studio (Attempt 1)...
 Payload: {
-  "model": "Undi95/Llama-3-Unholy-8B",
   "messages": [
     {
-      "content": "INFORMATION:\\nThe location is a Mountain, where, Wise-Llama and Wanderer, are present. Recently Wanderer and Wise-Llama noticed each other., and just now Wanderer said 'Hello Llama, fancy seeing you up here!' to Wise-Llama.\\nINSTRUCTION:\\nYou are functioning in the role of a Ai Roleplay; 1. Your task is to respond as Wise-Llama to the communication from Wanderer in one sentence involving appropriate, a short dialogue produced and a single action taken, by Wise-Llama.\\nEXAMPLE OUTPUT:\\nai_npc_current: '\"I'm delighted to see you here, it's quite an unexpected pleasure!\", Wise-Llama says as he offers a warm smile to Wanderer'.",
-      "role": "user"
+      "role": "user",
+      "content": "INFORMATION:\\nThe location is a Mountain, where, Wise-Llama and Wanderer, are present. Recently Wanderer and Wise-Llama noticed each other., and just now Wanderer said 'Hello Wise-Llama, hows your day going, found any nice shrubs?' to Wise-Llama.\\nINSTRUCTION:\\nYou are functioning in the role of Ai Roleplay; Your task is, to respond as Wise-Llama to the communication from Wanderer, in one sentence involving an appropriate, short dialogue produced and single action taken, by Wise-Llama.\\nEXAMPLE OUTPUT:\\nai_npc_current: '\"I'm delighted to see you here, it's quite an unexpected pleasure!\", Wise-Llama says as they offer a warm smile to Wanderer'."
     }
-  ]
+  ],
+  "model": "Undi95/Llama-3-Unholy-8B"
 }
-Received response from LM Studio
 
 ...etc...
 
@@ -54,19 +57,19 @@ Received response from LM Studio
 ========================================================
 
 Wanderer:
-Hello Llama, fancy seeing you up here!
+Hello Wise-Llama, hows your day going, found any nice shrubs?
 
 --------------------------------------------------------
 
 Wise-Llama:
 Here is the response:
 
-"Ah, Wanderer, I'm delighted to see you here, it's quite an unexpected pleasure" Wise-Llama says as he offers a warm smile to Wanderer and nods his head in greeting.
+"Ah, nice to meet you too, Wanderer I've found some lovely wildflowers over there by that large boulder, would you like to take a look", Wise-Llama says while gesturing towards the flowers.
 
 --------------------------------------------------------
 
 Recent Events:
-Wanderer and Wise-Llama greeted each other with warm smiles and nods, indicating a pleasant surprise at their unexpected encounter.
+Wanderer and Wise-Llama interacted by greeting each other and exchanging gestures, with Wise-Llama pointing out a location where they found some lovely wildflowers.
 
 --------------------------------------------------------
 
@@ -76,7 +79,6 @@ The roleplay started, and then Wanderer and Wise-Llama noticed each other.
 ========================================================
 
 Your Input (Back=B, Exit=X):
-
 
 ```
 
