@@ -19,9 +19,10 @@ function Show-MainMenu {
         Write-Host "`n`n`n`n                         Main Menu"
         Write-Host "                         ---------`n"
         Write-Host "                    1. Start Chatting`n"
-        Write-Host "                    2. Configure Chat`n`n`n`n"
+        Write-Host "                    2. Configure Chat`n"
+        Write-Host "                    3. Configure Model`n`n`n`n"
         Write-DualSeparator
-        $selection = Read-Host "Select; Choose Options = 1-2, Exit Program = X"
+        $selection = Read-Host "Select; Choose Options = 1-3, Exit Program = X"
 
         switch ($selection) {
             "1" {
@@ -45,6 +46,14 @@ function Show-MainMenu {
                     }
                 }
             }
+            "3" {
+                while ($true) {
+                    $modelSelection = Show-ModelMenu -config $config
+                    if (-not $modelSelection) {
+                        break
+                    }
+                }
+            }
             "X" { 
                 Shutdown-Exit -server_port $config.script_comm_port
                 return $false 
@@ -53,6 +62,7 @@ function Show-MainMenu {
         }
     }
 }
+
 
 
 # Function to display and handle the configuration menu
@@ -79,25 +89,65 @@ function Show-ConfigMenu {
         switch ($selection) {
             "1" {
                 $newUserName = Read-Host "Enter new User Name"
-                Update-Configuration -config $config -key "human_name" -value $newUserName
                 $config['human_name'] = $newUserName
             }
             "2" {
                 $newNpcName = Read-Host "Enter new Npc Name"
-                Update-Configuration -config $config -key "ai_npc_name" -value $newNpcName
                 $config['ai_npc_name'] = $newNpcName
             }
             "3" {
                 $newLocation = Read-Host "Enter new Rp Location"
-                Update-Configuration -config $config -key "scenario_location" -value $newLocation
                 $config['scenario_location'] = $newLocation
             }
             "B" {
-                Save-Configuration -config $config
-                $global:Config = Load-Configuration -configPath $configPath  # Reload configuration from file
+                Manage-Configuration -action "save" -config $config
+                $global:Config = Manage-Configuration -action "load" -configPath $configPath
                 return $false
             }
             default { Write-Host "Invalid selection. Please choose a valid option." }
+        }
+    }
+}
+
+function Show-ModelMenu {
+    param (
+        [hashtable]$config,
+        [string]$configPath = ".\data\config_general.json"
+    )
+
+    # Log when the model menu is accessed
+    Send-LogToEngine -message "Accessed: Model Menu" -server_port $config.script_comm_port
+
+    $models = Get-ModelsFromServer
+
+    while ($true) {
+        Clear-Host
+        Write-DualSeparator
+        Write-Host "`n                       Model Menu"
+        Write-Host "                       ----------`n"
+
+        for ($i = 0; $i -lt $models.data.Count; $i++) {
+            $modelParts = $models.data[$i].id -split '/'
+            $displayName = "$($modelParts[0])/$($modelParts[1])"
+            Write-Host "             $($i+1). $displayName`n"
+        }
+        Write-DualSeparator
+        $selection = Read-Host "Select a model by number, Back to Menu = B"
+
+        if ($selection -in @('B', 'b')) {
+            return $false
+        }
+
+        if ($selection -gt 0 -and $selection -le $models.data.Count) {
+            $selectedModel = $models.data[$selection - 1].id
+            $config['model_name'] = $selectedModel
+            Manage-Configuration -action "save" -config $config
+            $global:Config = Manage-Configuration -action "load" -configPath $configPath
+            Write-Host "Model $displayName selected."
+            Start-Sleep -Seconds 2
+            return $true
+        } else {
+            Write-Host "Invalid selection. Please choose a valid option."
         }
     }
 }

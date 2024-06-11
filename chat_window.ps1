@@ -10,7 +10,8 @@ Start-Sleep -Seconds 1
 Configure-Manage-Window -Action "configure" -windowTitle "StudioChat - Chat Window" -TopLeft
 
 # Load configuration
-$config = Load-Configuration -configPath ".\data\config_general.json"
+$config = Manage-Configuration -action "load" -configPath ".\data\config_general.json"
+
 $server_address = "localhost"
 $server_port = $config.script_comm_port
 
@@ -54,7 +55,6 @@ function Draw-ChatInterface {
     Write-DualSeparator
 }
 
-
 # Function to start chatting
 function Start-Chatting {
     param (
@@ -65,13 +65,13 @@ function Start-Chatting {
     $server_port = $config.script_comm_port
 
     # Initialize new session
-    Update-Response -key "human_current" -value "$($config.human_name) met with $($config.ai_npc_name)."
-    Update-Response -key "ai_npc_current" -value "$($config.ai_npc_name) met with $($config.human_name)."
-    Update-Response -key "recent_events" -value "$($config.human_name) and $($config.ai_npc_name) noticed each other."
-    Update-Response -key "scenario_history" -value "The roleplay started."
+    Manage-Response -responsePath ".\data\model_response.json" -key "human_current" -value "$($config.human_name) met with $($config.ai_npc_name)." -update
+    Manage-Response -responsePath ".\data\model_response.json" -key "ai_npc_current" -value "$($config.ai_npc_name) met with $($config.human_name)." -update
+    Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value "$($config.human_name) and $($config.ai_npc_name) noticed each other." -update
+    Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value "The roleplay started." -update
 
     while ($true) {
-        $response = Load-Response
+        $response = Manage-Response -responsePath ".\data\model_response.json"
         Draw-ChatInterface -config $config -response $response -stage 1
 
         Write-Host "Your Input (Back=B, Exit=X): " -NoNewline
@@ -85,8 +85,8 @@ function Start-Chatting {
             break
         }
 
-        Update-Response -key "human_current" -value $user_input
-        $response = Load-Response
+        Manage-Response -responsePath ".\data\model_response.json" -key "human_current" -value $user_input -update
+        $response = Manage-Response -responsePath ".\data\model_response.json"
         Draw-ChatInterface -config $config -response $response -stage 2
 
         try {
@@ -125,8 +125,8 @@ function Start-Chatting {
                 }
                 $responseText = [string]::Join([environment]::NewLine, $responseLines)
 
-                Update-Response -key "ai_npc_current" -value $responseText
-                $response = Load-Response -responsePath ".\data\model_response.json"
+                Manage-Response -responsePath ".\data\model_response.json" -key "ai_npc_current" -value $responseText -update
+                $response = Manage-Response -responsePath ".\data\model_response.json"
                 Draw-ChatInterface -config $config -response $response -stage 3
 
                 # Send consolidate prompt to engine_window
@@ -155,8 +155,8 @@ function Start-Chatting {
                         $recent_events = $consolidateResponseLines[0]
                         $scenario_history = $consolidateResponseLines[1]
 
-                        Update-Response -key "recent_events" -value $recent_events
-                        Update-Response -key "scenario_history" -value $scenario_history
+                        Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value $recent_events -update
+                        Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value $scenario_history -update
                     }
 
                     $client.Close()
@@ -176,11 +176,10 @@ function Start-Chatting {
     Write-Host "Chat window closed."
 }
 
-
 # Main logic
 Start-Sleep -Seconds 1
 Clear-Host
-Write-Separator
+Write-DualSeparator
 Write-Host "Chat Window Initialized."
 Start-Sleep -Seconds 1
 

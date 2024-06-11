@@ -72,41 +72,47 @@ function Send-LogToEngine {
     }
 }
 
-# Load configuration
-function Load-Configuration {
+# Manage-Configuration function
+function Manage-Configuration {
     param (
+        [string]$action,
+        [hashtable]$config = $null,
+        [string]$key = $null,
+        [string]$value = $null,
         [string]$configPath = ".\data\config_general.json",
         [int]$server_port = 12345
     )
-    $config = Get-Content -Raw -Path $configPath | ConvertFrom-Json
-    $hashtable = @{}
-    $config.PSObject.Properties | ForEach-Object { $hashtable[$_.Name] = $_.Value }
-    Send-LogToEngine -message "Loaded: $configPath" -server_port $server_port
-    return $hashtable
+
+    switch ($action) {
+        "load" {
+            $jsonConfig = Get-Content -Raw -Path $configPath | ConvertFrom-Json
+            $hashtable = @{}
+            foreach ($property in $jsonConfig.PSObject.Properties) {
+                $hashtable[$property.Name] = $property.Value
+            }
+            Send-LogToEngine -message "Loaded: $configPath" -server_port $server_port
+            return $hashtable
+        }
+        "save" {
+            if ($null -eq $config) {
+                throw "Config hashtable must be provided for save action."
+            }
+            $config | ConvertTo-Json -Depth 10 | Set-Content -Path $configPath
+            Send-LogToEngine -message "Updated: $configPath" -server_port $server_port
+        }
+        "update" {
+            if ($null -eq $config -or $null -eq $key -or $null -eq $value) {
+                throw "Config hashtable, key, and value must be provided for update action."
+            }
+            $config[$key] = $value
+            Manage-Configuration -action "save" -config $config -configPath $configPath -server_port $server_port
+        }
+        default {
+            throw "Invalid action. Valid actions are: load, save, update."
+        }
+    }
 }
 
-# Save configuration
-function Save-Configuration {
-    param (
-        [hashtable]$config,
-        [string]$configPath = ".\data\config_general.json",
-        [int]$server_port = 12345
-    )
-    $config | ConvertTo-Json -Depth 10 | Set-Content -Path $configPath
-    Send-LogToEngine -message "Updated: $configPath" -server_port $server_port
-}
-
-# Update configuration
-function Update-Configuration {
-    param (
-        [hashtable]$config,
-        [string]$key,
-        [string]$value,
-        [int]$server_port = 12345
-    )
-    $config[$key] = $value
-    Save-Configuration -config $config -server_port $server_port
-}
 
 function Configure-Manage-Window {
     param (
@@ -177,4 +183,15 @@ function Shutdown-Exit {
 
     $chatProcessId = (Get-Process -Name "pwsh" | Where-Object { $_.MainWindowTitle -eq "StudioChat - Chat Window" }).Id
     Configure-Manage-Window -WindowHandle (Get-WindowHandle -ProcessId $chatProcessId) -Action "close"
+}
+
+function Get-ModelsFromServer {
+    try {
+        $response = Invoke-WebRequest -Uri "http://localhost:1234/v1/models" -UseBasicParsing
+        $models = $response.Content | ConvertFrom-Json
+        return $models
+    } catch {
+        Write-Host "Failed to retrieve models from server: $_"
+        return $null
+    }
 }

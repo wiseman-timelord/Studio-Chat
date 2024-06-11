@@ -11,17 +11,20 @@ function Manage-Response {
 
     $response = Get-Content -Raw -Path $responsePath | ConvertFrom-Json
     $hashtable = @{}
-    $response.PSObject.Properties.Name | ForEach-Object { $hashtable[$_] = $response."$_" }
+    foreach ($property in $response.PSObject.Properties) {
+        $hashtable[$property.Name] = $property.Value
+    }
     Write-Host "Loaded: $responsePath"
 
     if ($update) {
-        $response[$key] = $value
-        $response | ConvertTo-Json -Depth 10 | Set-Content -Path $responsePath
+        $hashtable[$key] = $value
+        $hashtable | ConvertTo-Json -Depth 10 | Set-Content -Path $responsePath
         Write-Host "Updated: $responsePath"
     }
 
     return $hashtable
 }
+
 
 # Process txt prompt
 function Get-ProcessedPrompt {

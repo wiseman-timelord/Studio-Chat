@@ -13,7 +13,8 @@ $global:LogMessagesEnabled = $false
 Configure-Manage-Window -Action "configure" -windowTitle "StudioChat - Engine Window" -BottomLeft
 
 # Load configuration
-$config = Load-Configuration -configPath ".\data\config_general.json"
+$config = Manage-Configuration -action "load" -configPath ".\data\config_general.json"
+
 
 $lm_studio_endpoint = $config.lm_studio_endpoint
 $model_name = $config.model_name
@@ -67,7 +68,7 @@ try {
                 continue
             }
 
-            $response = Load-Response -responsePath ".\data\model_response.json"
+            $response = Manage-Response -responsePath ".\data\model_response.json"
             if ($message -eq "consolidate") {
                 $eventsResponse = Handle-Prompt -promptType "prompt_events" -config $config -response $response
 
@@ -75,9 +76,9 @@ try {
                 Write-Host "Response JSON: $($eventsResponse | ConvertTo-Json -Depth 10)"
 
                 if ($eventsResponse -eq "No response from model!") {
-                    Update-Response -key "recent_events" -value "No response from model!"
+                    Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value "No response from model!" -update
                 } else {
-                    Update-Response -key "recent_events" -value $eventsResponse
+                    Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value $eventsResponse -update
                 }
 
                 $historyResponse = Handle-Prompt -promptType "prompt_history" -config $config -response $response
@@ -86,9 +87,9 @@ try {
                 Write-Host "Response JSON: $($historyResponse | ConvertTo-Json -Depth 10)"
 
                 if ($historyResponse -eq "No response from model!") {
-                    Update-Response -key "scenario_history" -value "No response from model!"
+                    Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value "No response from model!" -update
                 } else {
-                    Update-Response -key "scenario_history" -value $historyResponse
+                    Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value $historyResponse -update
                 }
 
                 $writer.WriteLine($eventsResponse)
@@ -103,11 +104,11 @@ try {
                 Write-Host "Received response from LM Studio"
 
                 if ($model_response -eq "No response from model!") {
-                    Update-Response -key "ai_npc_current" -value "No response from model!"
+                    Manage-Response -responsePath ".\data\model_response.json" -key "ai_npc_current" -value "No response from model!" -update
                 } else {
                     # Filter the response for "ai_roleplaying"
                     $filtered_response = Filter-Response -response $model_response -type "ai_roleplaying"
-                    Update-Response -key "ai_npc_current" -value $filtered_response
+                    Manage-Response -responsePath ".\data\model_response.json" -key "ai_npc_current" -value $filtered_response -update
 
                     $responseLines = $filtered_response -split [environment]::NewLine
                     foreach ($line in $responseLines) {
