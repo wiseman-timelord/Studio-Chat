@@ -57,7 +57,8 @@ function Show-MainMenu {
 # Function to display and handle the configuration menu
 function Show-ConfigMenu {
     param (
-        [hashtable]$config
+        [hashtable]$config,
+        [string]$configPath = ".\data\config_general.json"
     )
 
     # Log when the config menu is accessed
@@ -91,6 +92,7 @@ function Show-ConfigMenu {
             }
             "B" {
                 Save-Configuration -config $config
+                $global:Config = Load-Configuration -configPath $configPath  # Reload configuration from file
                 return $false
             }
             default { Write-Host "Invalid selection. Please choose a valid option." }
