@@ -24,31 +24,6 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 - GPU/CPU interference, and many other great features due to LM Studio.
 
 ### PREVIEW:
-- Engine Window...
-```
---------------------------------------------------------
-
-Engine Initialized.
-Loading menu.
-Loaded: .\data\config.json
-Accessed: Main Menu
-Selected: Start Chatting
-Loaded: .\data\response.json
-Sending request to LM Studio...
-Sending request to LM Studio (Attempt 1)...
-Payload: {
-  "messages": [
-    {
-      "content": "INFORMATION:\\nThe location is a Mountain, where, Wise-Llama and Wanderer, are present. Recently Wanderer and Wise-Llama noticed each other., and just now Wanderer said 'Hello llama, I brought beers, do llamas drink beer?' to Wise-Llama.\\nINSTRUCTION:\\nYou are functioning in the role of Ai Roleplay; Your task is, to respond as Wise-Llama to the communication from Wanderer, in one sentence involving an appropriate, short dialogue produced and single action taken, by Wise-Llama.\\nEXAMPLE OUTPUT:\\nai_npc_current: '\"I'm delighted to see you here, it's quite an unexpected pleasure!\", Wise-Llama says as they offer a warm smile to Wanderer'.",
-      "role": "user"
-    }
-  ],
-  "model": "Undi95/Llama-3-Unholy-8B"
-}
-
-...etc...
-
-```
 - Chat Window...
 ```
 ========================================================
@@ -76,6 +51,32 @@ The roleplay started, and then Wanderer and Wise-Llama noticed each other.
 Your Input (Back=B, Exit=X):
 
 ```
+- Engine Window...
+```
+--------------------------------------------------------
+
+Engine Initialized.
+Loading menu.
+Loaded: .\data\config.json
+Accessed: Main Menu
+Selected: Start Chatting
+Loaded: .\data\response.json
+Sending request to LM Studio...
+Sending request to LM Studio (Attempt 1)...
+Payload: {
+  "messages": [
+    {
+      "content": "INFORMATION:\\nThe location is a Mountain, where, Wise-Llama and Wanderer, are present. Recently Wanderer and Wise-Llama noticed each other., and just now Wanderer said 'Hello llama, I brought beers, do llamas drink beer?' to Wise-Llama.\\nINSTRUCTION:\\nYou are functioning in the role of Ai Roleplay; Your task is, to respond as Wise-Llama to the communication from Wanderer, in one sentence involving an appropriate, short dialogue produced and single action taken, by Wise-Llama.\\nEXAMPLE OUTPUT:\\nai_npc_current: '\"I'm delighted to see you here, it's quite an unexpected pleasure!\", Wise-Llama says as they offer a warm smile to Wanderer'.",
+      "role": "user"
+    }
+  ],
+  "model": "Undi95/Llama-3-Unholy-8B"
+}
+
+...etc...
+
+```
+
 
 ## REQUIREMENTS:
 - Powershell Core 7, may specify 7.5 later, 7.5 is interesting..  
