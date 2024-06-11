@@ -1,9 +1,9 @@
 {
-  "ai_npc_name": "Wise-Llama",
   "model_name": "Undi95/Llama-3-Unholy-8B",
-  "human_name": "Wanderer",
-  "script_comm_port": 12345,
-  "scenario_location": "street",
+  "session_history": "the conversation started",
   "lm_studio_endpoint": "http://localhost:1234/v1/chat/completions",
-  "session_history": "the conversation started"
+  "script_comm_port": 12345,
+  "ai_npc_name": "Wise-Llama",
+  "human_name": "Wanderer",
+  "scenario_location": "a Mountain"
 }

@@ -1,5 +1,46 @@
 # utility.ps1 - Utility script for shared functions
 
+Add-Type -AssemblyName System.Windows.Forms
+
+Add-Type @"
+using System;
+using System.Runtime.InteropServices;
+
+public struct RECT
+{
+    public int left;
+    public int top;
+    public int right;
+    public int bottom;
+}
+
+public class pInvoke
+{
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern bool GetWindowRect(IntPtr hWnd, ref RECT rect);
+}
+"@
+
+Add-Type @"
+using System;
+using System.Runtime.InteropServices;
+using System.Text;
+
+public class WindowApi
+{
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    public static extern bool SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+    
+    public const int WM_CLOSE = 0x0010;
+}
+"@
+
 # Artwork
 function Write-Separator {
     Write-Host "`n--------------------------------------------------------`n"
@@ -10,6 +51,7 @@ function Write-DualSeparator {
     Write-Host "`n========================================================`n"
 }
 
+# Send printed message for engine_window
 function Send-LogToEngine {
     param (
         [string]$message,
@@ -66,79 +108,57 @@ function Update-Configuration {
     Save-Configuration -config $config -server_port $server_port
 }
 
-Add-Type -AssemblyName System.Windows.Forms
-
-Add-Type @"
-using System;
-using System.Runtime.InteropServices;
-
-public struct RECT
-{
-    public int left;
-    public int top;
-    public int right;
-    public int bottom;
-}
-
-public class pInvoke
-{
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern bool GetWindowRect(IntPtr hWnd, ref RECT rect);
-}
-"@
-
-function Move-Window {
+function Configure-Window {
     param (
-        [System.IntPtr]$WindowHandle,
+        [string]$windowTitle,
         [switch]$TopLeft,
         [switch]$BottomLeft
     )
 
-    # Get the window bounds
-    $rect = New-Object RECT
-    [pInvoke]::GetWindowRect($WindowHandle, [ref]$rect)
+    $Host.UI.RawUI.WindowTitle = $windowTitle
+    $windowHandle = (Get-Process -Id $PID).MainWindowHandle
+    Manage-Window -WindowHandle $windowHandle -Action "move" -TopLeft:$TopLeft -BottomLeft:$BottomLeft
+}
 
-    # Get the screen dimensions
-    $screen = [System.Windows.Forms.Screen]::FromHandle($WindowHandle).WorkingArea
+function Manage-Window {
+    param (
+        [System.IntPtr]$WindowHandle,
+        [string]$Action,
+        [switch]$TopLeft,
+        [switch]$BottomLeft
+    )
 
-    # Calculate new dimensions and position
-    $width = $screen.Width / 2
-    $height = $screen.Height / 2
+    switch ($Action) {
+        "move" {
+            # Get the window bounds
+            $rect = New-Object RECT
+            [pInvoke]::GetWindowRect($WindowHandle, [ref]$rect)
 
-    if ($TopLeft) {
-        $x = $screen.Left
-        $y = $screen.Top
-    } elseif ($BottomLeft) {
-        $x = $screen.Left
-        $y = $screen.Top + $height
-    } else {
-        $x = $rect.left
-        $y = $rect.top
+            # Get the screen dimensions
+            $screen = [System.Windows.Forms.Screen]::FromHandle($WindowHandle).WorkingArea
+
+            # Calculate new dimensions and position
+            $width = $screen.Width / 2
+            $height = $screen.Height / 2
+
+            if ($TopLeft) {
+                $x = $screen.Left
+                $y = $screen.Top
+            } elseif ($BottomLeft) {
+                $x = $screen.Left
+                $y = $screen.Top + $height
+            } else {
+                $x = $rect.left
+                $y = $rect.top
+            }
+
+            [pInvoke]::MoveWindow($WindowHandle, $x, $y, [int]$width, [int]$height, $true) | Out-Null
+        }
+        "close" {
+            [WindowApi]::SendMessage($WindowHandle, [WindowApi]::WM_CLOSE, [IntPtr]::Zero, [IntPtr]::Zero) | Out-Null
+        }
     }
-
-    # Move and resize the window
-    [pInvoke]::MoveWindow($WindowHandle, $x, $y, [int]$width, [int]$height, $true) | Out-Null
 }
-
-Add-Type @"
-using System;
-using System.Runtime.InteropServices;
-using System.Text;
-
-public class WindowApi
-{
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern bool SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
-    
-    public const int WM_CLOSE = 0x0010;
-}
-"@
 
 function Get-WindowHandle {
     param (
@@ -146,23 +166,7 @@ function Get-WindowHandle {
     )
 
     $process = Get-Process -Id $ProcessId
-    if ($process.MainWindowHandle -ne [IntPtr]::Zero) {
-        return $process.MainWindowHandle
-    }
-    return [IntPtr]::Zero
-}
-
-function Close-Window {
-    param (
-        [int]$ProcessId
-    )
-
-    $windowHandle = Get-WindowHandle -ProcessId $ProcessId
-    if ($windowHandle -ne [IntPtr]::Zero) {
-        [WindowApi]::SendMessage($windowHandle, [WindowApi]::WM_CLOSE, [IntPtr]::Zero, [IntPtr]::Zero) | Out-Null
-    } else {
-        Write-Host "Window with Process ID '$ProcessId' not found."
-    }
+    return $process.MainWindowHandle
 }
 
 function Shutdown-Exit {
@@ -182,12 +186,10 @@ function Shutdown-Exit {
     } catch {
         Write-Host "Error sending shutdown command: $_"
     }
-    
-    # Close the Engine Window by Process ID
+
     $engineProcessId = (Get-Process -Name "pwsh" | Where-Object { $_.MainWindowTitle -eq "StudioChat - Engine Window" }).Id
-    Close-Window -ProcessId $engineProcessId
-    
-    # Close the Chat Window by Process ID
+    Manage-Window -WindowHandle (Get-WindowHandle -ProcessId $engineProcessId) -Action "close"
+
     $chatProcessId = (Get-Process -Name "pwsh" | Where-Object { $_.MainWindowTitle -eq "StudioChat - Chat Window" }).Id
-    Close-Window -ProcessId $chatProcessId
+    Manage-Window -WindowHandle (Get-WindowHandle -ProcessId $chatProcessId) -Action "close"
 }

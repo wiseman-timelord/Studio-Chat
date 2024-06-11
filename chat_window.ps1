@@ -7,9 +7,7 @@
 Start-Sleep -Seconds 1
 
 # Configure Window
-$Host.UI.RawUI.WindowTitle = "StudioChat - Chat Window"
-$windowHandle = (Get-Process -Id $PID).MainWindowHandle
-Move-Window -WindowHandle $windowHandle -TopLeft
+Configure-Window -windowTitle "StudioChat - Chat Window" -TopLeft
 
 # Load configuration
 $config = Load-Configuration -configPath ".\data\config.json"

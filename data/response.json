@@ -1,7 +1,7 @@
 {
-  "scenario_history": "The roleplay started, and then, Randomer and Tolkin noticed each other.",
   "session_history": "",
-  "ai_npc_current": "ai_npc_current: \"Ah, just Randomer and Tolkin noticed each other, it seems like they're getting acquainted, let me go check on them for now,\" Wise-Llama says with a curious expression while walking towards Randomer and Tolkin.",
-  "recent_events": "Wanderer and Wise-Llama interacted with each other, with Wise-Llama showing curiosity towards a situation involving Randomer and Tolkin.",
-  "human_current": "whats going on?"
+  "scenario_history": "The roleplay started, and then Wanderer and Wise-Llama noticed each other.",
+  "human_current": "Hello Wise-Llama, hows your day going, found any nice shrubs?",
+  "recent_events": "Wanderer and Wise-Llama interacted by greeting each other and exchanging gestures, with Wise-Llama pointing out a location where they found some lovely wildflowers.",
+  "ai_npc_current": "Here is the response:\r\n\r\n\"Ah, nice to meet you too, Wanderer I've found some lovely wildflowers over there by that large boulder, would you like to take a look\", Wise-Llama says while gesturing towards the flowers."
 }

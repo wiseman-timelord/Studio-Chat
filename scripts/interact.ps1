@@ -56,11 +56,11 @@ function Generate-Response {
     for ($attempt = 1; $attempt -le $maxRetries; $attempt++) {
         try {
             Write-Host "Sending request to LM Studio (Attempt $attempt)..."
-            Write-Host "Payload: $payload"
+            Write-Host "Payload: $payload" # Show the JSON payload being sent
 
             $response = Invoke-RestMethod -Uri $lm_studio_endpoint -Method Post -Body $payload -ContentType "application/json"
             Write-Host "Received response from LM Studio"
-            Write-Host "Raw Response: $($response | ConvertTo-Json -Depth 10)"
+            Write-Host "Raw Response: $($response | ConvertTo-Json -Depth 10)" # Show the JSON response received
             
             $content = $response.choices[0].message.content -replace "`n", [environment]::NewLine
 
@@ -81,6 +81,8 @@ function Generate-Response {
     return 'No response from model!'
 }
 
+
+
 # Function to create prompt
 function Create-Prompt {
     param (
@@ -97,50 +99,33 @@ function Create-Prompt {
     return $prompt
 }
 
-# Function to handle the events prompt
-function Handle-EventsPrompt {
+# Handle events and history prompt.
+function Handle-Prompt {
     param (
+        [string]$promptType,
         [hashtable]$config,
         [hashtable]$response
     )
 
-    $promptTemplate = Get-ProcessedPrompt -filePath ".\data\events.txt"
-    $eventsPrompt = $promptTemplate -replace '\{human_name\}', $config.human_name `
+    $promptPath = ".\data\$($promptType).txt"
+    $promptTemplate = Get-ProcessedPrompt -filePath $promptPath
+
+    switch ($promptType) {
+        "events" {
+            $prompt = $promptTemplate -replace '\{human_name\}', $config.human_name `
                                       -replace '\{ai_npc_name\}', $config.ai_npc_name `
                                       -replace '\{human_current\}', $response.human_current `
                                       -replace '\{ai_npc_current\}', $response.ai_npc_current
-
-    # Replace double backslashes with single backslashes for newline
-    $eventsPrompt = $eventsPrompt -replace "\\n", "`n"
-
-    # Send the prompt to the model and process the response
-    $model_response = Generate-Response -message $eventsPrompt -lm_studio_endpoint $config.lm_studio_endpoint -model_name $config.model_name
-
-    if ($model_response -eq "No response from model!") {
-        return "No response from model!"
-    }
-
-    $filtered_response = Filter-Response -response $model_response -type "text_processing"
-
-    return $filtered_response
-}
-
-# Function to handle the history prompt
-function Handle-HistoryPrompt {
-    param (
-        [hashtable]$config,
-        [hashtable]$response
-    )
-
-    $promptTemplate = Get-ProcessedPrompt -filePath ".\data\history.txt"
-    $historyPrompt = $promptTemplate -replace '\{recent_events\}', $response.recent_events `
+        }
+        "history" {
+            $prompt = $promptTemplate -replace '\{recent_events\}', $response.recent_events `
                                       -replace '\{scenario_history\}', $response.scenario_history
+        }
+    }
 
-    # Replace double backslashes with single backslashes for newline
-    $historyPrompt = $historyPrompt -replace "\\n", "`n"
+    $prompt = $prompt -replace "\\n", "`n"
 
-    # Send the prompt to the model and process the response
-    $model_response = Generate-Response -message $historyPrompt -lm_studio_endpoint $config.lm_studio_endpoint -model_name $config.model_name
+    $model_response = Generate-Response -message $prompt -lm_studio_endpoint $config.lm_studio_endpoint -model_name $config.model_name
 
     if ($model_response -eq "No response from model!") {
         return "No response from model!"
@@ -150,6 +135,7 @@ function Handle-HistoryPrompt {
 
     return $filtered_response
 }
+
 
 # Function to filter the response based on the type
 function Filter-Response {
