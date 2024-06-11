@@ -70,7 +70,7 @@ try {
                 $eventsResponse = Handle-Prompt -promptType "events" -config $config -response $response
 
                 Write-Host "Received response from LM Studio for events"
-                Write-Host "Raw Response: $($eventsResponse | ConvertTo-Json -Depth 10)"
+                Write-Host "Response JSON: $($eventsResponse | ConvertTo-Json -Depth 10)"
 
                 if ($eventsResponse -eq "No response from model!") {
                     Update-Response -key "recent_events" -value "No response from model!"
@@ -81,7 +81,7 @@ try {
                 $historyResponse = Handle-Prompt -promptType "history" -config $config -response $response
 
                 Write-Host "Received response from LM Studio for history"
-                Write-Host "Raw Response: $($historyResponse | ConvertTo-Json -Depth 10)"
+                Write-Host "Response JSON: $($historyResponse | ConvertTo-Json -Depth 10)"
 
                 if ($historyResponse -eq "No response from model!") {
                     Update-Response -key "scenario_history" -value "No response from model!"
@@ -95,12 +95,10 @@ try {
                 $prompt = Create-Prompt -config $config -response $response
 
                 Write-Host "Sending request to LM Studio..."
-                Write-Host "Payload: $($prompt | ConvertTo-Json -Depth 10)" # Show the JSON payload
 
                 $model_response = Generate-Response -message $prompt -lm_studio_endpoint $lm_studio_endpoint -model_name $model_name
 
                 Write-Host "Received response from LM Studio"
-                Write-Host "Raw Response: $($model_response | ConvertTo-Json -Depth 10)" # Show the JSON response
 
                 if ($model_response -eq "No response from model!") {
                     Update-Response -key "ai_npc_current" -value "No response from model!"
