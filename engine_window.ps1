@@ -74,7 +74,7 @@ try {
 
             $response = Load-Response -responsePath ".\data\model_response.json"
             if ($message -eq "consolidate") {
-                $eventsResponse = Handle-Prompt -promptType "events" -config $config -response $response
+                $eventsResponse = Handle-Prompt -promptType "prompt_events" -config $config -response $response
 
                 Write-Host "Received response from LM Studio for events"
                 Write-Host "Response JSON: $($eventsResponse | ConvertTo-Json -Depth 10)"
@@ -85,7 +85,7 @@ try {
                     Update-Response -key "recent_events" -value $eventsResponse
                 }
 
-                $historyResponse = Handle-Prompt -promptType "history" -config $config -response $response
+                $historyResponse = Handle-Prompt -promptType "prompt_history" -config $config -response $response
 
                 Write-Host "Received response from LM Studio for history"
                 Write-Host "Response JSON: $($historyResponse | ConvertTo-Json -Depth 10)"

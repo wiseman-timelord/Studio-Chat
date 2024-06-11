@@ -111,13 +111,13 @@ function Handle-Prompt {
     $promptTemplate = Get-ProcessedPrompt -filePath $promptPath
 
     switch ($promptType) {
-        "events" {
+        "prompt_events" {
             $prompt = $promptTemplate -replace '\{human_name\}', $config.human_name `
                                       -replace '\{ai_npc_name\}', $config.ai_npc_name `
                                       -replace '\{human_current\}', $response.human_current `
                                       -replace '\{ai_npc_current\}', $response.ai_npc_current
         }
-        "history" {
+        "prompt_history" {
             $prompt = $promptTemplate -replace '\{recent_events\}', $response.recent_events `
                                       -replace '\{scenario_history\}', $response.scenario_history
         }
@@ -136,7 +136,6 @@ function Handle-Prompt {
     return $filtered_response
 }
 
-
 # Function to filter the response based on the type
 function Filter-Response {
     param (
@@ -154,6 +153,19 @@ function Filter-Response {
 
             # Handle ".!"
             $filtered_response = $filtered_response -replace "\.\!", "."
+
+            # Count the number of colons in the response
+            $colon_count = ($filtered_response -split ":").Length - 1
+
+            if ($colon_count -eq 1) {
+                # If only one colon, select content after the colon up to the first period
+                $filtered_response = $filtered_response -split ":", 2 | Select-Object -Last 1
+                $filtered_response = $filtered_response -split "\.", 2 | Select-Object -First 1
+            } elseif ($colon_count -gt 1) {
+                # If multiple colons, select content after the second colon up to the following period
+                $filtered_response = $filtered_response -split ":", 3 | Select-Object -Last 1
+                $filtered_response = $filtered_response -split "\.", 2 | Select-Object -First 1
+            }
 
             # Trim any additional blank lines
             $filtered_response = $filtered_response.Trim()
