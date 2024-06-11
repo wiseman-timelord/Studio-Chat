@@ -51,23 +51,20 @@ Payload: {
 ```
 - Chat Window...
 ```
-
 ========================================================
 
 Wanderer:
-Hello Wise-Llama, hows your day going, found any nice shrubs?
+Oh, a llama, say, you look like a very wise llama, do you have wise thoughts and do wise things?
 
 --------------------------------------------------------
 
 Wise-Llama:
-Here is the response:
-
-"Ah, nice to meet you too, Wanderer I've found some lovely wildflowers over there by that large boulder, would you like to take a look", Wise-Llama says while gesturing towards the flowers.
+'"Ah, yes, I do possess wise thoughts and wisdom from the ancient mountains, would you like to hear one"', Wise-Llama asks while nodding thoughtfully and producing a small, intricately carved wooden box from their cloak
 
 --------------------------------------------------------
 
 Recent Events:
-Wanderer and Wise-Llama interacted by greeting each other and exchanging gestures, with Wise-Llama pointing out a location where they found some lovely wildflowers.
+Wanderer and Wise-Llama interacted, with the latter being perceived as wise by the former, who was impressed by their thoughtful demeanor and the presentation of a small wooden box from their cloak.
 
 --------------------------------------------------------
 
