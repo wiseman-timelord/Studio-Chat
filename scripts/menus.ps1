@@ -10,6 +10,9 @@ function Show-MainMenu {
         [hashtable]$config
     )
 
+    # Log when the main menu is accessed
+    Send-LogToEngine -message "Accessed: Main Menu" -server_port $config.script_comm_port
+
     while ($true) {
         Clear-Host
         Write-DualSeparator
@@ -22,6 +25,7 @@ function Show-MainMenu {
 
         switch ($selection) {
             "1" {
+                Send-LogToEngine -message "Selected: Start Chatting" -server_port $config.script_comm_port
                 Start-Chatting -config $config
                 # Log roleplay start
                 $client = [System.Net.Sockets.TcpClient]::new("localhost", $config.script_comm_port)
@@ -56,6 +60,9 @@ function Show-ConfigMenu {
         [hashtable]$config
     )
 
+    # Log when the config menu is accessed
+    Send-LogToEngine -message "Accessed: Config Menu" -server_port $config.script_comm_port
+
     while ($true) {
         Clear-Host
         Write-Separator
@@ -69,22 +76,24 @@ function Show-ConfigMenu {
         switch ($selection) {
             "1" {
                 $newUserName = Read-Host "Enter new User Name"
-                Update-Configuration -key "human_name" -value $newUserName
+                Update-Configuration -config $config -key "human_name" -value $newUserName
                 $config['human_name'] = $newUserName
             }
             "2" {
                 $newNpcName = Read-Host "Enter new Npc Name"
-                Update-Configuration -key "ai_npc_name" -value $newNpcName
+                Update-Configuration -config $config -key "ai_npc_name" -value $newNpcName
                 $config['ai_npc_name'] = $newNpcName
             }
             "3" {
                 $newLocation = Read-Host "Enter new Rp Location"
-                Update-Configuration -key "scenario_location" -value $newLocation
+                Update-Configuration -config $config -key "scenario_location" -value $newLocation
                 $config['scenario_location'] = $newLocation
             }
-            "B" { return $false }
+            "B" {
+                Save-Configuration -config $config
+                return $false
+            }
             default { Write-Host "Invalid selection. Please choose a valid option." }
         }
     }
 }
-

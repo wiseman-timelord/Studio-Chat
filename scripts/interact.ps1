@@ -8,6 +8,7 @@ function Load-Response {
     $response = Get-Content -Raw -Path $responsePath | ConvertFrom-Json
     $hashtable = @{}
     $response.PSObject.Properties.Name | ForEach-Object { $hashtable[$_] = $response."$_" }
+    Write-Host "Loaded: $responsePath"
     return $hashtable
 }
 
@@ -24,6 +25,7 @@ function Update-Response {
     }
     $response[$key] = $value
     $response | ConvertTo-Json -Depth 10 | Set-Content -Path $responsePath
+    Write-Host "Updated: $responsePath"
 }
 
 # Process txt prompt

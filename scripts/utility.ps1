@@ -10,26 +10,60 @@ function Write-DualSeparator {
     Write-Host "`n========================================================`n"
 }
 
+function Send-LogToEngine {
+    param (
+        [string]$message,
+        [string]$server_address = "localhost",
+        [int]$server_port = 12345
+    )
+
+    try {
+        $client = [System.Net.Sockets.TcpClient]::new($server_address, $server_port)
+        $stream = $client.GetStream()
+        $writer = [System.IO.StreamWriter]::new($stream)
+        $writer.AutoFlush = $true
+
+        $writer.WriteLine("log: $message")
+        $client.Close()
+    } catch {
+        Write-Host "Error sending log message to engine window: $_"
+    }
+}
+
 # Load configuration
 function Load-Configuration {
     param (
-        [string]$configPath = ".\data\config.json"
+        [string]$configPath = ".\data\config.json",
+        [int]$server_port = 12345
     )
     $config = Get-Content -Raw -Path $configPath | ConvertFrom-Json
     $hashtable = @{}
     $config.PSObject.Properties | ForEach-Object { $hashtable[$_.Name] = $_.Value }
+    Send-LogToEngine -message "Loaded: $configPath" -server_port $server_port
     return $hashtable
+}
+
+# Save configuration
+function Save-Configuration {
+    param (
+        [hashtable]$config,
+        [string]$configPath = ".\data\config.json",
+        [int]$server_port = 12345
+    )
+    $config | ConvertTo-Json -Depth 10 | Set-Content -Path $configPath
+    Send-LogToEngine -message "Updated: $configPath" -server_port $server_port
 }
 
 # Update configuration
 function Update-Configuration {
     param (
+        [hashtable]$config,
         [string]$key,
-        [string]$value
+        [string]$value,
+        [int]$server_port = 12345
     )
-    $config = Load-Configuration -configPath ".\data\config.json"
     $config[$key] = $value
-    $config | ConvertTo-Json | Set-Content -Path ".\data\config.json"
+    Save-Configuration -config $config -server_port $server_port
 }
 
 Add-Type -AssemblyName System.Windows.Forms

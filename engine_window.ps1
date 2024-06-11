@@ -24,6 +24,14 @@ $scenario_location = $config.scenario_location
 $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any, $server_port)
 $listener.Start()
 
+# Function to handle log messages
+function Receive-LogMessage {
+    param (
+        [string]$message
+    )
+    Write-Host $message
+}
+
 # Entry Point
 Start-Sleep -Seconds 1
 Clear-Host
@@ -50,6 +58,12 @@ try {
 
             if ($message -eq "Roleplay Started.") {
                 Write-Host "Roleplay Started."
+                continue
+            }
+
+            if ($message.StartsWith("log: ")) {
+                $logMessage = $message.Substring(5)
+                Receive-LogMessage -message $logMessage
                 continue
             }
 
