@@ -2,6 +2,7 @@
 
 # Load utility functions
 . .\scripts\utility.ps1
+. .\scripts\interact.ps1
 
 # Function to display and handle the main menu
 function Show-MainMenu {
@@ -11,16 +12,24 @@ function Show-MainMenu {
 
     while ($true) {
         Clear-Host
-        Write-Separator
-        Write-Host "`n                Main Menu`n"
-        Write-Host "             1. Start Chatting`n"
-        Write-Host "             2. Configure Chat`n"
-        Write-Separator
+        Write-DualSeparator
+        Write-Host "`n`n                    Main Menu"
+        Write-Host "                    ---------`n"
+        Write-Host "               1. Start Chatting`n"
+        Write-Host "               2. Configure Chat`n`n"
+        Write-DualSeparator
         $selection = Read-Host "Select; Choose Options = 1-2, Exit Program = X"
 
         switch ($selection) {
             "1" {
                 Start-Chatting -config $config
+                # Log roleplay start
+                $client = [System.Net.Sockets.TcpClient]::new("localhost", $config.script_comm_port)
+                $stream = $client.GetStream()
+                $writer = [System.IO.StreamWriter]::new($stream)
+                $writer.AutoFlush = $true
+                $writer.WriteLine("Roleplay Started.")
+                $client.Close()
                 return $true
             }
             "2" {
@@ -39,6 +48,7 @@ function Show-MainMenu {
         }
     }
 }
+
 
 # Function to display and handle the configuration menu
 function Show-ConfigMenu {

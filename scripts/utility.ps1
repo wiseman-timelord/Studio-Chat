@@ -32,32 +32,6 @@ function Update-Configuration {
     $config | ConvertTo-Json | Set-Content -Path ".\data\config.json"
 }
 
-# Function to load response data
-function Load-Response {
-    param (
-        [string]$responsePath = ".\data\response.json"
-    )
-    $response = Get-Content -Raw -Path $responsePath | ConvertFrom-Json
-    $hashtable = @{}
-    $response.PSObject.Properties.Name | ForEach-Object { $hashtable[$_] = $response."$_" }
-    return $hashtable
-}
-
-# Function to update response data
-function Update-Response {
-    param (
-        [string]$key,
-        [string]$value,
-        [string]$responsePath = ".\data\response.json"
-    )
-    $response = Load-Response -responsePath $responsePath
-    if (-not $response) {
-        $response = @{}
-    }
-    $response[$key] = $value
-    $response | ConvertTo-Json -Depth 10 | Set-Content -Path $responsePath
-}
-
 Add-Type -AssemblyName System.Windows.Forms
 
 Add-Type @"
@@ -113,30 +87,6 @@ function Move-Window {
 
     # Move and resize the window
     [pInvoke]::MoveWindow($WindowHandle, $x, $y, [int]$width, [int]$height, $true) | Out-Null
-}
-
-# Function to generate response from LM Studio
-function Generate-Response {
-    param (
-        [string]$message,
-        [string]$lm_studio_endpoint,
-        [string]$model_name
-    )
-
-    $payload = @{
-        model = $model_name
-        messages = @(@{ role = "user"; content = $message })
-    } | ConvertTo-Json
-
-    try {
-        Write-Host "Sending request to LM Studio..."
-        $response = Invoke-RestMethod -Uri $lm_studio_endpoint -Method Post -Body $payload -ContentType "application/json"
-        Write-Host "Received response from LM Studio"
-        return $response.choices[0].message.content -replace "`n", [environment]::NewLine
-    } catch {
-        Write-Host "Error communicating with LM Studio: $_"
-        return 'Error: Could not reach LM Studio.'
-    }
 }
 
 Add-Type @"

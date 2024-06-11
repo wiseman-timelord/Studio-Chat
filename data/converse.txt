@@ -1,1 +1,8 @@
-Your task is to respond to {human_name} with one sentence of dialogue, followed by a one-sentence description of an action you take, and separate them with a comma, for example, '"I'm delighted to see you here, it's quite an unexpected pleasure!", {ai_npc_name} says as he offers a warm smile to {human_name}.'.\n\nThe location is {scenario_location}, where, {ai_npc_name} and {human_name}, are present. {human_name} just said '{human_current}' to {agent_name}.
+INFORMATION:
+The location is {scenario_location}, where, {ai_npc_name} and {human_name}, are present. Recently {recent_events}, and just now {human_name} said '{human_current}' to {ai_npc_name}.
+
+INSTRUCTION:
+You are functioning in the role of a Ai Roleplay; 1. Your task is to respond as {ai_npc_name} to the communication from {human_name} in one sentence involving appropriate, a short dialogue produced and a single action taken, by {ai_npc_name}.
+
+EXAMPLE OUTPUT:
+ai_npc_current: '"I'm delighted to see you here, it's quite an unexpected pleasure!", {ai_npc_name} says as they offer a warm smile to {human_name}'.

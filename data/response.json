@@ -1,4 +1,7 @@
 {
-  "human_current": "Do you have any wise insights for me today?",
-  "ai_npc_current": "\"Here in Mountain's peak, I offer this guidance: seek truth with humility and courage,\" Wise-Llama advises while gazing into the horizon.<|<|>\r\n"
+  "session_history": "",
+  "human_current": "Hello Llama, fancy seeing you up here!",
+  "recent_events": "Wanderer and Wise-Llama greeted each other with warm smiles and nods, indicating a pleasant surprise at their unexpected encounter.",
+  "ai_npc_current": "Here is the response:\r\n\r\n\"Ah, Wanderer, I'm delighted to see you here, it's quite an unexpected pleasure\" Wise-Llama says as he offers a warm smile to Wanderer and nods his head in greeting.",
+  "scenario_history": "The roleplay started, and then Wanderer and Wise-Llama noticed each other."
 }
