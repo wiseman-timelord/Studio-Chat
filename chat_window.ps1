@@ -176,6 +176,7 @@ function Start-Chatting {
     Write-Host "Chat window closed."
 }
 
+
 # Main logic
 Start-Sleep -Seconds 1
 Clear-Host

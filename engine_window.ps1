@@ -39,7 +39,7 @@ function Receive-LogMessage {
 # Entry Point
 Start-Sleep -Seconds 1
 Clear-Host
-Write-Separator
+Write-DualSeparator
 Write-Host "Engine Initialized."
 $global:LogMessagesEnabled = $true  # Enable log messages after initialization
 Start-Sleep -Seconds 1
@@ -59,11 +59,6 @@ try {
                 Write-Host "Shutting Down."
                 Shutdown-Exit -server_port $server_port
                 break
-            }
-
-            if ($message -eq "Roleplay Started.") {
-                Write-Host "Roleplay Started."
-                continue
             }
 
             if ($message.StartsWith("log: ")) {

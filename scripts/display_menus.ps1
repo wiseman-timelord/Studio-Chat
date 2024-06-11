@@ -16,24 +16,25 @@ function Show-MainMenu {
     while ($true) {
         Clear-Host
         Write-DualSeparator
-        Write-Host "`n`n                    Main Menu"
-        Write-Host "                    ---------`n"
-        Write-Host "               1. Start Chatting`n"
-        Write-Host "               2. Configure Chat`n`n"
+        Write-Host "`n`n`n`n                         Main Menu"
+        Write-Host "                         ---------`n"
+        Write-Host "                    1. Start Chatting`n"
+        Write-Host "                    2. Configure Chat`n`n`n`n"
         Write-DualSeparator
         $selection = Read-Host "Select; Choose Options = 1-2, Exit Program = X"
 
         switch ($selection) {
             "1" {
                 Send-LogToEngine -message "Selected: Start Chatting" -server_port $config.script_comm_port
-                Start-Chatting -config $config
-                # Log roleplay start
+                # Log roleplay start only when actually starting
                 $client = [System.Net.Sockets.TcpClient]::new("localhost", $config.script_comm_port)
                 $stream = $client.GetStream()
                 $writer = [System.IO.StreamWriter]::new($stream)
                 $writer.AutoFlush = $true
                 $writer.WriteLine("Roleplay Started.")
                 $client.Close()
+
+                Start-Chatting -config $config
                 return $true
             }
             "2" {
@@ -66,12 +67,13 @@ function Show-ConfigMenu {
 
     while ($true) {
         Clear-Host
-        Write-Separator
-        Write-Host "`n             Config Menu`n"
-        Write-Host "           1. User Name ($($config['human_name']))`n"
-        Write-Host "           2. Npc Name ($($config['ai_npc_name']))`n"
-        Write-Host "           3. Rp Location ($($config['scenario_location']))`n"
-        Write-Separator
+        Write-DualSeparator
+        Write-Host "`n                       Config Menu"
+        Write-Host "                       -----------`n"
+        Write-Host "                 1. User Name ($($config['human_name']))`n"
+        Write-Host "                 2. Npc Name ($($config['ai_npc_name']))`n"
+        Write-Host "                 3. Rp Location ($($config['scenario_location']))`n"
+        Write-DualSeparator
         $selection = Read-Host "Select; Choose Options = 1-3, Back to Menu = B"
 
         switch ($selection) {
