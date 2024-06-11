@@ -7,7 +7,7 @@
 Start-Sleep -Seconds 1
 
 # Configure Window
-Configure-Window -windowTitle "StudioChat - Chat Window" -TopLeft
+Configure-Manage-Window -Action "configure" -windowTitle "StudioChat - Chat Window" -TopLeft
 
 # Load configuration
 $config = Load-Configuration -configPath ".\data\config_general.json"

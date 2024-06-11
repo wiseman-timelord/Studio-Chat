@@ -108,53 +108,38 @@ function Update-Configuration {
     Save-Configuration -config $config -server_port $server_port
 }
 
-function Configure-Window {
+function Configure-Manage-Window {
     param (
-        [string]$windowTitle,
-        [switch]$TopLeft,
-        [switch]$BottomLeft
-    )
-
-    $Host.UI.RawUI.WindowTitle = $windowTitle
-    $windowHandle = (Get-Process -Id $PID).MainWindowHandle
-    Manage-Window -WindowHandle $windowHandle -Action "move" -TopLeft:$TopLeft -BottomLeft:$BottomLeft
-}
-
-function Manage-Window {
-    param (
-        [System.IntPtr]$WindowHandle,
         [string]$Action,
+        [System.IntPtr]$WindowHandle = [System.IntPtr]::Zero,
+        [string]$windowTitle = $null,
         [switch]$TopLeft,
         [switch]$BottomLeft
     )
 
     switch ($Action) {
+        "configure" {
+            $Host.UI.RawUI.WindowTitle = $windowTitle
+            $WindowHandle = (Get-Process -Id $PID).MainWindowHandle
+            Configure-Manage-Window -Action "move" -WindowHandle $WindowHandle -TopLeft:$TopLeft -BottomLeft:$BottomLeft
+        }
         "move" {
-            # Get the window bounds
+            if ($WindowHandle -eq [System.IntPtr]::Zero) {
+                throw "WindowHandle must be provided for move action."
+            }
             $rect = New-Object RECT
             [pInvoke]::GetWindowRect($WindowHandle, [ref]$rect)
-
-            # Get the screen dimensions
             $screen = [System.Windows.Forms.Screen]::FromHandle($WindowHandle).WorkingArea
-
-            # Calculate new dimensions and position
             $width = $screen.Width / 2
             $height = $screen.Height / 2
-
-            if ($TopLeft) {
-                $x = $screen.Left
-                $y = $screen.Top
-            } elseif ($BottomLeft) {
-                $x = $screen.Left
-                $y = $screen.Top + $height
-            } else {
-                $x = $rect.left
-                $y = $rect.top
-            }
-
+            $x = $TopLeft ? $screen.Left : ($BottomLeft ? $screen.Left : $rect.left)
+            $y = $TopLeft ? $screen.Top : ($BottomLeft ? $screen.Top + $height : $rect.top)
             [pInvoke]::MoveWindow($WindowHandle, $x, $y, [int]$width, [int]$height, $true) | Out-Null
         }
         "close" {
+            if ($WindowHandle -eq [System.IntPtr]::Zero) {
+                throw "WindowHandle must be provided for close action."
+            }
             [WindowApi]::SendMessage($WindowHandle, [WindowApi]::WM_CLOSE, [IntPtr]::Zero, [IntPtr]::Zero) | Out-Null
         }
     }
@@ -188,8 +173,8 @@ function Shutdown-Exit {
     }
 
     $engineProcessId = (Get-Process -Name "pwsh" | Where-Object { $_.MainWindowTitle -eq "StudioChat - Engine Window" }).Id
-    Manage-Window -WindowHandle (Get-WindowHandle -ProcessId $engineProcessId) -Action "close"
+    Configure-Manage-Window -WindowHandle (Get-WindowHandle -ProcessId $engineProcessId) -Action "close"
 
     $chatProcessId = (Get-Process -Name "pwsh" | Where-Object { $_.MainWindowTitle -eq "StudioChat - Chat Window" }).Id
-    Manage-Window -WindowHandle (Get-WindowHandle -ProcessId $chatProcessId) -Action "close"
+    Configure-Manage-Window -WindowHandle (Get-WindowHandle -ProcessId $chatProcessId) -Action "close"
 }

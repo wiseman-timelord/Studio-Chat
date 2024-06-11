@@ -1,7 +1,7 @@
 {
-  "recent_events": "Wanderer and Wise-Llama noticed each other.",
-  "ai_npc_current": "\"I'm delighted to see you here, it's quite an unexpected pleasure\", Wise-Llama says as they extend their hand in a friendly gesture towards Wanderer",
-  "session_history": "",
+  "ai_npc_current": "'\"Ah, interesting indeed Tell me more about your encounter with me,\" Wise-Llama asks curiously while leaning forward slightly",
+  "human_current": "Wanderer met with Wise-Llama.",
   "scenario_history": "The roleplay started.",
-  "human_current": "Wanderer met with Wise-Llama."
+  "session_history": "",
+  "recent_events": "Wanderer and Wise-Llama noticed each other."
 }

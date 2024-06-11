@@ -10,7 +10,7 @@ Start-Sleep -Seconds 1
 $global:LogMessagesEnabled = $false
 
 # Configure Window
-Configure-Window -windowTitle "StudioChat - Engine Window" -BottomLeft
+Configure-Manage-Window -Action "configure" -windowTitle "StudioChat - Engine Window" -BottomLeft
 
 # Load configuration
 $config = Load-Configuration -configPath ".\data\config_general.json"

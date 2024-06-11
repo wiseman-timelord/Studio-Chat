@@ -1,31 +1,26 @@
 # interact_model.ps1 - Interactions with LM Studio
 
-# Function to load response data
-function Load-Response {
+# Function to load or update response data
+function Manage-Response {
     param (
-        [string]$responsePath = ".\data\model_response.json"
+        [string]$key = $null,
+        [string]$value = $null,
+        [string]$responsePath = ".\data\model_response.json",
+        [switch]$update
     )
+
     $response = Get-Content -Raw -Path $responsePath | ConvertFrom-Json
     $hashtable = @{}
     $response.PSObject.Properties.Name | ForEach-Object { $hashtable[$_] = $response."$_" }
     Write-Host "Loaded: $responsePath"
-    return $hashtable
-}
 
-# Function to update response data
-function Update-Response {
-    param (
-        [string]$key,
-        [string]$value,
-        [string]$responsePath = ".\data\model_response.json"
-    )
-    $response = Load-Response -responsePath $responsePath
-    if (-not $response) {
-        $response = @{}
+    if ($update) {
+        $response[$key] = $value
+        $response | ConvertTo-Json -Depth 10 | Set-Content -Path $responsePath
+        Write-Host "Updated: $responsePath"
     }
-    $response[$key] = $value
-    $response | ConvertTo-Json -Depth 10 | Set-Content -Path $responsePath
-    Write-Host "Updated: $responsePath"
+
+    return $hashtable
 }
 
 # Process txt prompt
