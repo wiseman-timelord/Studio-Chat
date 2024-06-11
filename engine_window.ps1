@@ -1,15 +1,19 @@
 # engine_window.ps1 - script for "Engine Window".
 
 # Load utility functions
-. .\scripts\utility.ps1
-. .\scripts\interact.ps1
+. .\scripts\utility_general.ps1
+. .\scripts\interact_model.ps1
 Start-Sleep -Seconds 1
+
+
+# Global flag for log message control
+$global:LogMessagesEnabled = $false
 
 # Configure Window
 Configure-Window -windowTitle "StudioChat - Engine Window" -BottomLeft
 
 # Load configuration
-$config = Load-Configuration -configPath ".\data\config.json"
+$config = Load-Configuration -configPath ".\data\config_general.json"
 
 $lm_studio_endpoint = $config.lm_studio_endpoint
 $model_name = $config.model_name
@@ -27,7 +31,9 @@ function Receive-LogMessage {
     param (
         [string]$message
     )
-    Write-Host $message
+    if ($global:LogMessagesEnabled) {
+        Write-Host $message
+    }
 }
 
 # Entry Point
@@ -35,6 +41,7 @@ Start-Sleep -Seconds 1
 Clear-Host
 Write-Separator
 Write-Host "Engine Initialized."
+$global:LogMessagesEnabled = $true  # Enable log messages after initialization
 Start-Sleep -Seconds 1
 Write-Host "Loading menu."
 
@@ -65,7 +72,7 @@ try {
                 continue
             }
 
-            $response = Load-Response -responsePath ".\data\response.json"
+            $response = Load-Response -responsePath ".\data\model_response.json"
             if ($message -eq "consolidate") {
                 $eventsResponse = Handle-Prompt -promptType "events" -config $config -response $response
 

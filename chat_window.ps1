@@ -1,16 +1,16 @@
 # chat_window.ps1 - script for "Chat Window".
 
 # Load utility functions and menu functions
-. .\scripts\utility.ps1
-. .\scripts\menus.ps1
-. .\scripts\interact.ps1
+. .\scripts\utility_general.ps1
+. .\scripts\display_menus.ps1
+. .\scripts\interact_model.ps1
 Start-Sleep -Seconds 1
 
 # Configure Window
 Configure-Window -windowTitle "StudioChat - Chat Window" -TopLeft
 
 # Load configuration
-$config = Load-Configuration -configPath ".\data\config.json"
+$config = Load-Configuration -configPath ".\data\config_general.json"
 $server_address = "localhost"
 $server_port = $config.script_comm_port
 
@@ -126,7 +126,7 @@ function Start-Chatting {
                 $responseText = [string]::Join([environment]::NewLine, $responseLines)
 
                 Update-Response -key "ai_npc_current" -value $responseText
-                $response = Load-Response -responsePath ".\data\response.json"
+                $response = Load-Response -responsePath ".\data\model_response.json"
                 Draw-ChatInterface -config $config -response $response -stage 3
 
                 # Send consolidate prompt to engine_window
