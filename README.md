@@ -4,7 +4,6 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 ### DEVELOPMENT NOTES..
 - V1 can be done in the next 24hrs, the objective being "better than my previous chatbot"...
 1. Bugs when on config menu, didnt save correctly; is it only saving config on exit program?
-2. Filtering of response from converse, again count the number of ":", if there are only 1, then select content after ":" up until first ".", otherwise if multiple, then select the content after the second ":" up to the folling ".". Should do it.
 - After that the plan is possibly...
 1. Some kind of model for Image Generation, then use playground mode on LM Studio, then add a new graphical window taking up quarter screen for Graphics output, this should be based on "recent_events". Possibly when the player selects exit, then it would generate a final image from session history, and display it to the player as the program shuts down other windows, then close itself?? Maybe save scenario picture option? dunno. Either way it would require removal of the history in the display.
 1. In theory, there could be some kind of text generated world map in a new window taking up a quarter of the screen, the player will there have options of locations to go to, the npc could be randomised based on the theme of the location, the user can at any point travel elsewhere, to meet a different person at the other location, or even at most of the locations there would be no people, so as for the user to have to search around for people. 
