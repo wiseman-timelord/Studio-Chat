@@ -25,7 +25,7 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 - GPU/CPU interference, and many other great features due to LM Studio.
 
 ### PREVIEW:
-- Engine Window (requires update)...
+- Engine Window...
 ```
 --------------------------------------------------------
 
