@@ -19,7 +19,7 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 - IDK TBA
 
 ### PREVIEW:
-- Chat Window...
+- The Chat Window...
 ```
 ========================================================
 
@@ -46,7 +46,7 @@ The roleplay started, and then Wanderer and Wise-Llama noticed each other.
 Your Input (Back=B, Exit=X):
 
 ```
-- Engine Window...
+- The Engine Window...
 ```
 --------------------------------------------------------
 
@@ -71,7 +71,33 @@ Payload: {
 ...etc...
 
 ```
+- The Model Menu...
+```
 
+========================================================
+
+
+
+
+
+
+                    Config Model Menu
+                    -----------------
+
+                 1. Select Model
+
+                 2. Context Length (1024)
+
+
+
+
+
+
+========================================================
+
+Select; Choose Options = 1-2, Back to Menu = B:
+
+```
 
 ## REQUIREMENTS:
 - Powershell Core 7, may specify 7.5 later, 7.5 is interesting..  
