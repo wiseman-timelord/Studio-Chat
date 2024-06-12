@@ -1,9 +1,10 @@
 {
-  "script_comm_port": 12345,
-  "lm_studio_endpoint": "http://localhost:1234/v1/chat/completions",
+  "text_model_name": "QuantFactory/dolphin-2.9.2-qwen2-7b-GGUF/dolphin-2.9.2-qwen2-7b.Q6_K.gguf",
   "scenario_location": "Mountain",
-  "context_used": 1024,
+  "lm_studio_endpoint": "http://localhost:1234/v1/chat/completions",
   "ai_npc_name": "Wise-Llama",
-  "model_name": "Undi95/Llama-3-Unholy-8B/Llama-3-Unholy-8B.Q6_K.gguf",
-  "human_name": "Wanderer"
+  "human_name": "Wanderer",
+  "script_comm_port": 12345,
+  "image_model_name": "",
+  "context_factor": 2.0
 }
