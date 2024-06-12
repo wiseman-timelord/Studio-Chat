@@ -2,9 +2,7 @@
 Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hosted model(s). 
 
 ### DEVELOPMENT NOTES..
-- V1 can be done in the next 24hrs, objectives, "better than my previous chatbot" and "all noticable bugs fixed"...
-1. While starting a mode of roleplay, it seems to send the starting text to the model, as if the user just inputted it, for which, the output from the model is then ignored. if there is no input on the prompt for "Your Input (Back=B, Exit=X):", then the program should be doing nothing but waiting for input; it should NOT be doing ANYTHING with lm studio, while in the processes of starting roleplay mode.
-2. When Starting the app, I am seeing some kind of error, the error is because certain things are not initialized yet, so, something is being called before its ready, everything else works, just need to isolate the instance and delete the call.
+2. When Starting the app, I am seeing some kind of error, the error is because certain things are not initialized yet, so, something is being called before its ready, everything else works, just need to isolate the instance and delete the call. Make a quick fix, like we did with the other one, start with 0, print message, put to 1, when 1 do function.
 - Done for next release....
 1. Nothing yet.
 - After completion of v1.0, then possibly...
