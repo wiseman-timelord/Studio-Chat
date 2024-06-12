@@ -1,8 +1,3 @@
-INFORMATION:
-The recent interactions are, {human_name} said '{human_current}' and {ai_npc_name} said '{ai_npc_current}'.
-
-INSTRUCTION:
-You are functioning in the role of Text Processor; Your task is to summarize the stated interactions between, {human_name} and {ai_npc_name}, in one descriptive sentence, but do NOT include any dialogue.
-
-Example Output:
-EVENTS: {human_name} and {ai_npc_name}, greeted each other and exchanged friendly gestures.
+INFORMATION: The recent interactions are, {human_name} said '{human_current}' and {ai_npc_name} said '{ai_npc_current}'.
+INSTRUCTION: You are functioning in the role of Text Processor; Your task is to summarize the stated interactions between, {human_name} and {ai_npc_name}, in one descriptive sentence, but do NOT include any dialogue.
+Example Output: EVENTS: {human_name} and {ai_npc_name}, greeted each other and exchanged friendly gestures.

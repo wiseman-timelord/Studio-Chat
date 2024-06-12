@@ -1,8 +1,3 @@
-INFORMATION:
-The recent events are '{recent_events}', otherwise the scenario history so far is '{scenario_history}'.
-
-INSTRUCTION:
-You are functioning in the role of the Text Processor; Your task is, to consolidate the recent events into the scenario history, using upto a one descriptive paragraph, but do NOT include any dialogue.
-
-Example Output:
-HISTORY: The roleplay started, and then, {human_name} and {ai_npc_name}, greeted each other kindly.
+INFORMATION: The recent events are '{recent_events}', otherwise the scenario history so far is '{scenario_history}'.
+INSTRUCTION: You are functioning in the role of the Text Processor; Your task is, to consolidate the recent events into the scenario history, using upto a one descriptive paragraph, but do NOT include any dialogue.
+Example Output: HISTORY: The roleplay started, and then, {human_name} and {ai_npc_name}, greeted each other kindly.
