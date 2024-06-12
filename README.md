@@ -7,7 +7,8 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 2. When Starting the app, I am seeing some kind of error, the error is because certain things are not initialized yet, so, something is being called before its ready, everything else works, just need to isolate the instance and delete the call.
 - Done for next release....
 1. Dynamic context length, set by default at 2x the number of tokens required for the model, if we take each character to have a value of 1.25 tokens, ie 200 characters would result in a context length of 500. Note, 1.5X did not work correctly, so I assume this is a safe and sweet factor at 2X.
-2. Small correction of one of the prompts.
+2. Small correction of one of the prompts, placement of "'".
+3. Prompts sent to the model simplified (3 lines instead of 9).
 - After completion of v1.0, then possibly...
 1. Some kind of model for Image Generation, then use playground mode on LM Studio, then add a new graphical window taking up quarter screen for Graphics output, this should be based on "recent_events". Possibly when the player selects exit, then it would generate a final image from session history, and display it to the player as the program shuts down other windows, then close itself?? Maybe save scenario picture option? dunno. Either way it would require removal of the history in the display.
 1. In theory, there could be some kind of text generated world map in a new window taking up a quarter of the screen, the player will there have options of locations to go to, the npc could be randomised based on the theme of the location, the user can at any point travel elsewhere, to meet a different person at the other location, or even at most of the locations there would be no people, so as for the user to have to search around for people. 
