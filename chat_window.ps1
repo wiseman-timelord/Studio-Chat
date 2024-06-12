@@ -9,7 +9,7 @@ Start-Sleep -Seconds 1
 # Configure Window
 Configure-Manage-Window -Action "configure" -windowTitle "StudioChat - Chat Window" -TopLeft
 
-# Load configuration
+# Load Jsons
 $config = Manage-Configuration -action "load" -configPath ".\data\config_general.json"
 
 $server_address = "localhost"
@@ -64,11 +64,12 @@ function Start-Chatting {
     $server_address = "localhost"
     $server_port = $config.script_comm_port
 
-    # Initialize new session
-    Manage-Response -responsePath ".\data\model_response.json" -key "human_current" -value "$($config.human_name) met with $($config.ai_npc_name)." -update
-    Manage-Response -responsePath ".\data\model_response.json" -key "ai_npc_current" -value "$($config.ai_npc_name) met with $($config.human_name)." -update
-    Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value "$($config.human_name) and $($config.ai_npc_name) noticed each other." -update
-    Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value "The roleplay started." -update
+	# Initialize new session
+	Manage-Response -responsePath ".\data\model_response.json" -key "human_current" -value "$($config.human_name) met with $($config.ai_npc_name)." -update
+	Manage-Response -responsePath ".\data\model_response.json" -key "ai_npc_current" -value "$($config.ai_npc_name) met with $($config.human_name)." -update
+	Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value "$($config.human_name) and $($config.ai_npc_name) noticed each other." -update
+	Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value "The roleplay started." -update
+	Manage-Response -responsePath ".\data\model_response.json" -key "session_history" -value "" -update
 
     while ($true) {
         $response = Manage-Response -responsePath ".\data\model_response.json"

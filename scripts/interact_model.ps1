@@ -25,7 +25,6 @@ function Manage-Response {
     return $hashtable
 }
 
-
 # Process txt prompt
 function Get-ProcessedPrompt {
     param (

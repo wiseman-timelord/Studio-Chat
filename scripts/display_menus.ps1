@@ -48,8 +48,8 @@ function Show-MainMenu {
             }
             "3" {
                 while ($true) {
-                    $modelSelection = Show-ModelMenu -config $config
-                    if (-not $modelSelection) {
+                    $configModelSelection = Show-ConfigModelMenu -config $config
+                    if (-not $configModelSelection) {
                         break
                     }
                 }
@@ -62,7 +62,6 @@ function Show-MainMenu {
         }
     }
 }
-
 
 
 # Function to display and handle the configuration menu
@@ -109,45 +108,76 @@ function Show-ConfigMenu {
     }
 }
 
-function Show-ModelMenu {
+function Show-ConfigModelMenu {
     param (
         [hashtable]$config,
         [string]$configPath = ".\data\config_general.json"
     )
 
-    # Log when the model menu is accessed
-    Send-LogToEngine -message "Accessed: Model Menu" -server_port $config.script_comm_port
-
-    $models = Get-ModelsFromServer
+    # Log when the model config menu is accessed
+    Send-LogToEngine -message "Accessed: Config Model Menu" -server_port $config.script_comm_port
 
     while ($true) {
         Clear-Host
         Write-DualSeparator
-        Write-Host "`n                       Model Menu"
-        Write-Host "                       ----------`n"
-
-        for ($i = 0; $i -lt $models.data.Count; $i++) {
-            $modelParts = $models.data[$i].id -split '/'
-            $displayName = "$($modelParts[0])/$($modelParts[1])"
-            Write-Host "             $($i+1). $displayName`n"
-        }
+        Write-Host "`n`n`n`n`n                    Config Model Menu"
+        Write-Host "                    -----------------`n"
+        Write-Host "                 1. Select Model`n"
+        Write-Host "                 2. Context Length ($($config['context_used']))`n`n`n`n`n"
         Write-DualSeparator
-        $selection = Read-Host "Select a model by number, Back to Menu = B"
+        $selection = Read-Host "Select; Choose Options = 1-2, Back to Menu = B"
 
-        if ($selection -in @('B', 'b')) {
-            return $false
-        }
-
-        if ($selection -gt 0 -and $selection -le $models.data.Count) {
-            $selectedModel = $models.data[$selection - 1].id
-            $config['model_name'] = $selectedModel
-            Manage-Configuration -action "save" -config $config
-            $global:Config = Manage-Configuration -action "load" -configPath $configPath
-            Write-Host "Model $displayName selected."
-            Start-Sleep -Seconds 2
-            return $true
-        } else {
-            Write-Host "Invalid selection. Please choose a valid option."
+        switch ($selection) {
+            "1" {
+                while ($true) {
+                    $modelSelection = Show-ModelMenu -config $config
+                    if (-not $modelSelection) {
+                        break
+                    }
+                }
+            }
+            "2" {
+                $newContextLength = Read-Host "Enter new Context Length"
+                if ($newContextLength -match '^\d+$') {
+                    $config['context_used'] = [int]$newContextLength
+                    Set-ContextLength -contextLength $newContextLength
+                    Manage-Configuration -action "save" -config $config
+                    $global:Config = Manage-Configuration -action "load" -configPath $configPath
+                    Write-Host "Context Length set to $newContextLength."
+                    Start-Sleep -Seconds 2
+                } else {
+                    Write-Host "Invalid input. Please enter a numeric value."
+                }
+            }
+            "B" {
+                Manage-Configuration -action "save" -config $config
+                $global:Config = Manage-Configuration -action "load" -configPath $configPath
+                return $false
+            }
+            default { Write-Host "Invalid selection. Please choose a valid option." }
         }
     }
 }
+
+function Set-ContextLength {
+    param (
+        [int]$contextLength
+    )
+
+    # Define the URL for the config endpoint
+    $url = "http://localhost:1234/v1/config"
+
+    # Create the configuration payload
+    $payload = @{
+        n_ctx = $contextLength
+    } | ConvertTo-Json
+
+    # Send the POST request with the configuration payload
+    try {
+        $response = Invoke-RestMethod -Uri $url -Method Post -Body $payload -ContentType "application/json"
+        Write-Host "Context length set successfully."
+    } catch {
+        Write-Host "Failed to set context length: $_"
+    }
+}
+

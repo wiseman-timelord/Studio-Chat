@@ -15,7 +15,6 @@ Configure-Manage-Window -Action "configure" -windowTitle "StudioChat - Engine Wi
 # Load configuration
 $config = Manage-Configuration -action "load" -configPath ".\data\config_general.json"
 
-
 $lm_studio_endpoint = $config.lm_studio_endpoint
 $model_name = $config.model_name
 $server_port = $config.script_comm_port
