@@ -20,6 +20,8 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 - 1 Window to come...Image Generation based on "recent_events", ie previous actions.
 - Multi-OS Mac/Linux/Windows compatibility thanks to, PS Core and LM Studio.
 - GPU/CPU interference, and many other great features due to LM Studio.
+- Dynamic context length (prompt chars * 1.25 token per char * 2 = context length).
+- Designed for and tested on, models, Qwen2 and Llama3, 7/8B @ Q6 in GGUF.
 - IDK TBA
 
 ### PREVIEW:
