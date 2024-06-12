@@ -1,7 +1,7 @@
 {
-  "human_current": "Wanderer met with Wise-Llama.",
-  "scenario_history": "The roleplay started.",
+  "human_current": "Hello llama, you look wise, what is the answer to life, can you tell me?",
+  "recent_events": "Wanderer and Wise-Llama engaged in a mutual greeting, with Wise-Llama extending a hand to Wanderer while inviting them to explore the mountain together.",
   "session_history": "",
-  "ai_npc_current": "\"Ah, hello Wanderer I'm doing marvelously, thanks for asking",
-  "recent_events": "Wanderer and Wise-Llama noticed each other."
+  "ai_npc_current": "'\"The answer to life is not something that can be told, but rather experienced through the journey itself; come, let us explore this mountain together and discover its secrets\",' Wise-LLama says while extending a hand to Wanderer",
+  "scenario_history": "The roleplay started, and then Wanderer and Wise-Llama noticed each other."
 }

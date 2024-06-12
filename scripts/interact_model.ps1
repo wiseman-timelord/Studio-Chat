@@ -1,5 +1,69 @@
 # interact_model.ps1 - Interactions with LM Studio
 
+# Request Response (chat window)
+function Update-ModelResponse {
+    param (
+        [string]$responseText
+    )
+    $responseLines = $responseText -split [environment]::NewLine
+    if ($responseLines[-1] -eq "") {
+        $responseLines = $responseLines[0..($responseLines.Length - 2)]
+    }
+    $responseText = [string]::Join([environment]::NewLine, $responseLines)
+
+    $recent_events = $responseLines[0]
+    $scenario_history = $responseLines[1]
+
+    Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value $recent_events -update
+    Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value $scenario_history -update
+}
+
+# Request Consolidate (Chat Window)
+function Send-ConsolidateCommand {
+    param (
+        [string]$server_address,
+        [int]$server_port
+    )
+    $tcpClient = Initialize-TcpClient -server_address $server_address -server_port $server_port
+    $tcpClient.writer.WriteLine("consolidate")
+    $consolidateResponseText = Read-TcpResponse -reader $tcpClient.reader
+    $tcpClient.client.Close()
+    return $consolidateResponseText
+}
+
+# Request Consolidation (engine window)
+function Handle-Consolidation {
+    param (
+        [hashtable]$config,
+        [hashtable]$response,
+        [System.IO.StreamWriter]$writer
+    )
+
+    $eventsResponse = Handle-Prompt -promptType "prompt_events" -config $config -response $response
+    Write-Host "Received response from LM Studio for events"
+    Write-Host "Response JSON: $($eventsResponse | ConvertTo-Json -Depth 10)"
+
+    if ($eventsResponse -eq "No response from model!") {
+        Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value "No response from model!" -update
+    } else {
+        Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value $eventsResponse -update
+    }
+
+    $historyResponse = Handle-Prompt -promptType "prompt_history" -config $config -response $response
+    Write-Host "Received response from LM Studio for history"
+    Write-Host "Response JSON: $($historyResponse | ConvertTo-Json -Depth 10)"
+
+    if ($historyResponse -eq "No response from model!") {
+        Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value "No response from model!" -update
+    } else {
+        Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value $historyResponse -update
+    }
+
+    $writer.WriteLine($eventsResponse)
+    $writer.WriteLine($historyResponse)
+}
+
+
 # Function to load or update response data
 function Manage-Response {
     param (

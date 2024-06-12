@@ -36,6 +36,34 @@ function Receive-LogMessage {
     }
 }
 
+# Handle Chat Interaction
+function Handle-ChatMessage {
+    param (
+        [string]$message,
+        [hashtable]$config,
+        [hashtable]$response,
+        [System.IO.StreamWriter]$writer
+    )
+
+    $prompt = Create-Prompt -config $config -response $response
+    Write-Host "Sending request to LM Studio..."
+    $model_response = Generate-Response -message $prompt -lm_studio_endpoint $config.lm_studio_endpoint -model_name $config.model_name
+    Write-Host "Received response from LM Studio"
+
+    if ($model_response -eq "No response from model!") {
+        Manage-Response -responsePath ".\data\model_response.json" -key "ai_npc_current" -value "No response from model!" -update
+    } else {
+        $filtered_response = Filter-Response -response $model_response -type "ai_roleplaying"
+        Manage-Response -responsePath ".\data\model_response.json" -key "ai_npc_current" -value $filtered_response -update
+
+        $responseLines = $filtered_response -split [environment]::NewLine
+        foreach ($line in $responseLines) {
+            $writer.WriteLine($line)
+        }
+    }
+}
+
+
 # Entry Point
 Start-Sleep -Seconds 1
 Clear-Host

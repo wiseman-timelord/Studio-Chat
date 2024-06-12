@@ -1,9 +1,9 @@
 {
-  "model_name": "Undi95/Llama-3-Unholy-8B/Llama-3-Unholy-8B.Q6_K.gguf",
-  "lm_studio_endpoint": "http://localhost:1234/v1/chat/completions",
   "script_comm_port": 12345,
-  "human_name": "Wanderer",
+  "lm_studio_endpoint": "http://localhost:1234/v1/chat/completions",
+  "scenario_location": "Mountain",
   "context_used": 1024,
-  "scenario_location": "a Mountain",
-  "ai_npc_name": "Wise-Llama"
+  "ai_npc_name": "Wise-Llama",
+  "model_name": "Undi95/Llama-3-Unholy-8B/Llama-3-Unholy-8B.Q6_K.gguf",
+  "human_name": "Wanderer"
 }

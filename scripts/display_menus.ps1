@@ -129,11 +129,9 @@ function Show-ConfigModelMenu {
 
         switch ($selection) {
             "1" {
-                while ($true) {
-                    $modelSelection = Show-ModelMenu -config $config
-                    if (-not $modelSelection) {
-                        break
-                    }
+                $modelSelection = Show-ModelMenu -config $config
+                if (-not $modelSelection) {
+                    break
                 }
             }
             "2" {
@@ -159,6 +157,50 @@ function Show-ConfigModelMenu {
     }
 }
 
+
+function Show-ModelMenu {
+    param (
+        [hashtable]$config,
+        [string]$configPath = ".\data\config_general.json"
+    )
+
+    # Log when the model menu is accessed
+    Send-LogToEngine -message "Accessed: Model Menu" -server_port $config.script_comm_port
+
+    $models = Get-ModelsFromServer
+
+    while ($true) {
+        Clear-Host
+        Write-DualSeparator
+        Write-Host "`n                       Model Menu"
+        Write-Host "                       ----------`n"
+
+        for ($i = 0; $i -lt $models.data.Count; $i++) {
+            $modelParts = $models.data[$i].id -split '/'
+            $displayName = "$($modelParts[0])/$($modelParts[1])"
+            Write-Host "             $($i+1). $displayName`n"
+        }
+        Write-DualSeparator
+        $selection = Read-Host "Select a model by number, Back to Menu = B"
+
+        if ($selection -in @('B', 'b')) {
+            return $false
+        }
+
+        if ($selection -gt 0 -and $selection -le $models.data.Count) {
+            $selectedModel = $models.data[$selection - 1].id
+            $config['model_name'] = $selectedModel
+            Manage-Configuration -action "save" -config $config
+            $global:Config = Manage-Configuration -action "load" -configPath $configPath
+            Write-Host "Model $displayName selected."
+            Start-Sleep -Seconds 2
+            return $true
+        } else {
+            Write-Host "Invalid selection. Please choose a valid option."
+        }
+    }
+}
+
 function Set-ContextLength {
     param (
         [int]$contextLength
@@ -180,4 +222,3 @@ function Set-ContextLength {
         Write-Host "Failed to set context length: $_"
     }
 }
-

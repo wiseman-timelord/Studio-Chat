@@ -15,6 +15,54 @@ $config = Manage-Configuration -action "load" -configPath ".\data\config_general
 $server_address = "localhost"
 $server_port = $config.script_comm_port
 
+function Initialize-Session {
+    param (
+        [hashtable]$config
+    )
+    # Initial session setup
+    Manage-Response -responsePath ".\data\model_response.json" -key "human_current" -value "$($config.human_name) met with $($config.ai_npc_name)." -update
+    Manage-Response -responsePath ".\data\model_response.json" -key "ai_npc_current" -value "$($config.ai_npc_name) met with $($config.human_name)." -update
+    Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value "$($config.human_name) and $($config.ai_npc_name) noticed each other." -update
+    Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value "The roleplay started." -update
+    Manage-Response -responsePath ".\data\model_response.json" -key "session_history" -value "" -update
+}
+
+function Initialize-TcpClient {
+    param (
+        [string]$server_address,
+        [int]$server_port
+    )
+    $client = [System.Net.Sockets.TcpClient]::new($server_address, $server_port)
+    $stream = $client.GetStream()
+    $reader = [System.IO.StreamReader]::new($stream)
+    $writer = [System.IO.StreamWriter]::new($stream)
+    $writer.AutoFlush = $true
+    return @{ client = $client; stream = $stream; reader = $reader; writer = $writer }
+}
+
+function Read-TcpResponse {
+    param (
+        [System.IO.StreamReader]$reader
+    )
+    $responseText = ""
+    while ($true) {
+        $line = $reader.ReadLine()
+        if ($line -eq $null) { break }
+        $responseText += $line + [environment]::NewLine
+    }
+    return $responseText.TrimEnd([environment]::NewLine)
+}
+
+function Send-ShutdownCommand {
+    param (
+        [string]$server_address,
+        [int]$server_port
+    )
+    $tcpClient = Initialize-TcpClient -server_address $server_address -server_port $server_port
+    $tcpClient.writer.WriteLine("shutdown")
+    $tcpClient.client.Close()
+}
+
 # Chat interface
 function Draw-ChatInterface {
     param (
@@ -61,15 +109,7 @@ function Start-Chatting {
         [hashtable]$config
     )
 
-    $server_address = "localhost"
-    $server_port = $config.script_comm_port
-
-	# Initialize new session
-	Manage-Response -responsePath ".\data\model_response.json" -key "human_current" -value "$($config.human_name) met with $($config.ai_npc_name)." -update
-	Manage-Response -responsePath ".\data\model_response.json" -key "ai_npc_current" -value "$($config.ai_npc_name) met with $($config.human_name)." -update
-	Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value "$($config.human_name) and $($config.ai_npc_name) noticed each other." -update
-	Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value "The roleplay started." -update
-	Manage-Response -responsePath ".\data\model_response.json" -key "session_history" -value "" -update
+    Initialize-Session -config $config
 
     while ($true) {
         $response = Manage-Response -responsePath ".\data\model_response.json"
@@ -77,12 +117,10 @@ function Start-Chatting {
 
         Write-Host "Your Input (Back=B, Exit=X): " -NoNewline
         $user_input = Read-Host
-        if ($user_input -in @('B', 'b')) {
-            break
-        }
-
-        if ($user_input -in @('X', 'x')) {
-            Shutdown-Exit -server_port $server_port
+        if ($user_input -in @('B', 'b', 'X', 'x')) {
+            if ($user_input -in @('X', 'x')) {
+                Shutdown-Exit -server_port $server_port
+            }
             break
         }
 
@@ -91,85 +129,30 @@ function Start-Chatting {
         Draw-ChatInterface -config $config -response $response -stage 2
 
         try {
-            $client = [System.Net.Sockets.TcpClient]::new($server_address, $server_port)
-            $stream = $client.GetStream()
-            $reader = [System.IO.StreamReader]::new($stream)
-            $writer = [System.IO.StreamWriter]::new($stream)
-            $writer.AutoFlush = $true
-
-            $writer.WriteLine($user_input)
-            $responseText = ""
-            while ($true) {
-                $line = $reader.ReadLine()
-                if ($line -eq $null) { break }
-                $responseText += $line + [environment]::NewLine
-            }
+            $tcpClient = Initialize-TcpClient -server_address $server_address -server_port $server_port
+            $tcpClient.writer.WriteLine($user_input)
+            $responseText = Read-TcpResponse -reader $tcpClient.reader
 
             if ($responseText) {
                 if ($responseText -eq "shutdown") {
                     Write-Host "Shutdown command received. Exiting..."
-                    $client = [System.Net.Sockets.TcpClient]::new($server_address, $server_port)
-                    $stream = $client.GetStream()
-                    $writer = [System.IO.StreamWriter]::new($stream)
-                    $writer.AutoFlush = $true
-
-                    $writer.WriteLine("shutdown")
-                    $client.Close()
-                    Start-Sleep -Seconds 2 # Give time for the Engine Window to shutdown
+                    Send-ShutdownCommand -server_address $server_address -server_port $server_port
                     exit
                 }
-
-                # Trim the last line if it is blank
-                $responseLines = $responseText -split [environment]::NewLine
-                if ($responseLines[-1] -eq "") {
-                    $responseLines = $responseLines[0..($responseLines.Length - 2)]
-                }
-                $responseText = [string]::Join([environment]::NewLine, $responseLines)
 
                 Manage-Response -responsePath ".\data\model_response.json" -key "ai_npc_current" -value $responseText -update
                 $response = Manage-Response -responsePath ".\data\model_response.json"
                 Draw-ChatInterface -config $config -response $response -stage 3
 
-                # Send consolidate prompt to engine_window
-                try {
-                    $client = [System.Net.Sockets.TcpClient]::new($server_address, $server_port)
-                    $stream = $client.GetStream()
-                    $reader = [System.IO.StreamReader]::new($stream)
-                    $writer = [System.IO.StreamWriter]::new($stream)
-                    $writer.AutoFlush = $true
+                $consolidateResponseText = Send-ConsolidateCommand -server_address $server_address -server_port $server_port
 
-                    $writer.WriteLine("consolidate")
-                    $consolidateResponseText = ""
-                    while ($true) {
-                        $line = $reader.ReadLine()
-                        if ($line -eq $null) { break }
-                        $consolidateResponseText += $line + [environment]::NewLine
-                    }
-
-                    if ($consolidateResponseText) {
-                        $consolidateResponseLines = $consolidateResponseText -split [environment]::NewLine
-                        if ($consolidateResponseLines[-1] -eq "") {
-                            $consolidateResponseLines = $consolidateResponseLines[0..($consolidateResponseLines.Length - 2)]
-                        }
-                        $consolidateResponseText = [string]::Join([environment]::NewLine, $consolidateResponseLines)
-
-                        $recent_events = $consolidateResponseLines[0]
-                        $scenario_history = $consolidateResponseLines[1]
-
-                        Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value $recent_events -update
-                        Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value $scenario_history -update
-                    }
-
-                    $client.Close()
-                } catch {
-                    Write-Host "Error communicating with the server for consolidation: $_"
+                if ($consolidateResponseText) {
+                    Update-ModelResponse -responseText $consolidateResponseText
                 }
 
-                # Prompt for next user input
                 Write-Host "Your Input (Back=B, Exit=X): " -NoNewline
             }
-
-            $client.Close()
+            $tcpClient.client.Close()
         } catch {
             Write-Host "Error communicating with the server: $_"
         }
