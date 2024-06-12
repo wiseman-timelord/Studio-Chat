@@ -18,10 +18,11 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 
 
 ## FEATURES:
-- 2 Windows, Engine and Chat, snapping to each side of the screen on launch.
-- Multi-line input via Shift+Enter, no ability to return to earlier lines, entered with Enter at end.
+- 2 Windows, Engine and Chat, snapping to each corner of the screen on launch.
+- 1 Window to come...Image Generation based on "recent_events", ie previous actions.
 - Multi-OS Mac/Linux/Windows compatibility thanks to, PS Core and LM Studio.
 - GPU/CPU interference, and many other great features due to LM Studio.
+- IDK TBA
 
 ### PREVIEW:
 - Chat Window...
