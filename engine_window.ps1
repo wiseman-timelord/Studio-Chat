@@ -16,7 +16,7 @@ Configure-Manage-Window -Action "configure" -windowTitle "StudioChat - Engine Wi
 $config = Manage-Configuration -action "load" -configPath ".\data\config_general.json"
 
 $lm_studio_endpoint = $config.lm_studio_endpoint
-$model_name = $config.model_name
+$text_model_name = $config.text_model_name
 $server_port = $config.script_comm_port
 $ai_npc_name = $config.ai_npc_name
 $human_name = $config.human_name
@@ -47,7 +47,7 @@ function Handle-ChatMessage {
 
     $prompt = Create-Prompt -config $config -response $response
     Write-Host "Sending request to LM Studio..."
-    $model_response = Generate-Response -message $prompt -lm_studio_endpoint $config.lm_studio_endpoint -model_name $config.model_name
+    $model_response = Generate-Response -message $prompt -lm_studio_endpoint $config.lm_studio_endpoint -text_model_name $config.text_model_name
     Write-Host "Received response from LM Studio"
 
     if ($model_response -eq "No response from model!") {
@@ -62,6 +62,7 @@ function Handle-ChatMessage {
         }
     }
 }
+
 
 
 # Entry Point
@@ -126,7 +127,7 @@ try {
 
                 Write-Host "Sending request to LM Studio..."
 
-                $model_response = Generate-Response -message $prompt -lm_studio_endpoint $lm_studio_endpoint -model_name $model_name
+                $model_response = Generate-Response -message $prompt -lm_studio_endpoint $lm_studio_endpoint -text_model_name $text_model_name
 
                 Write-Host "Received response from LM Studio"
 

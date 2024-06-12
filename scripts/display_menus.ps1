@@ -123,7 +123,7 @@ function Show-ConfigModelMenu {
         Write-Host "`n`n`n`n`n                    Config Model Menu"
         Write-Host "                    -----------------`n"
         Write-Host "                 1. Select Model`n"
-        Write-Host "                 2. Context Length ($($config['context_used']))`n`n`n`n`n"
+        Write-Host "                 2. Context Factor ($($config['context_factor']))`n`n`n`n`n"
         Write-DualSeparator
         $selection = Read-Host "Select; Choose Options = 1-2, Back to Menu = B"
 
@@ -135,13 +135,12 @@ function Show-ConfigModelMenu {
                 }
             }
             "2" {
-                $newContextLength = Read-Host "Enter new Context Length"
-                if ($newContextLength -match '^\d+$') {
-                    $config['context_used'] = [int]$newContextLength
-                    Set-ContextLength -contextLength $newContextLength
+                $newContextFactor = Read-Host "Enter new Context Factor"
+                if ($newContextFactor -match '^\d+(\.\d+)?$') {
+                    $config['context_factor'] = [float]$newContextFactor
                     Manage-Configuration -action "save" -config $config
                     $global:Config = Manage-Configuration -action "load" -configPath $configPath
-                    Write-Host "Context Length set to $newContextLength."
+                    Write-Host "Context Factor set to $newContextFactor."
                     Start-Sleep -Seconds 2
                 } else {
                     Write-Host "Invalid input. Please enter a numeric value."
@@ -157,7 +156,6 @@ function Show-ConfigModelMenu {
     }
 }
 
-
 function Show-ModelMenu {
     param (
         [hashtable]$config,
@@ -169,6 +167,12 @@ function Show-ModelMenu {
 
     $models = Get-ModelsFromServer
 
+    if (-not $models -or -not $models.data -or $models.data.Count -eq 0) {
+        Write-Host "LM Studio And/Or Loaded Models, Not Found!"
+        Start-Sleep -Seconds 5
+        return $false
+    }
+
     while ($true) {
         Clear-Host
         Write-DualSeparator
@@ -178,7 +182,7 @@ function Show-ModelMenu {
         for ($i = 0; $i -lt $models.data.Count; $i++) {
             $modelParts = $models.data[$i].id -split '/'
             $displayName = "$($modelParts[0])/$($modelParts[1])"
-            Write-Host "             $($i+1). $displayName`n"
+            Write-Host "     $($i+1). $displayName`n"
         }
         Write-DualSeparator
         $selection = Read-Host "Select a model by number, Back to Menu = B"
@@ -189,7 +193,7 @@ function Show-ModelMenu {
 
         if ($selection -gt 0 -and $selection -le $models.data.Count) {
             $selectedModel = $models.data[$selection - 1].id
-            $config['model_name'] = $selectedModel
+            $config['text_model_name'] = $selectedModel
             Manage-Configuration -action "save" -config $config
             $global:Config = Manage-Configuration -action "load" -configPath $configPath
             Write-Host "Model $displayName selected."
@@ -201,24 +205,3 @@ function Show-ModelMenu {
     }
 }
 
-function Set-ContextLength {
-    param (
-        [int]$contextLength
-    )
-
-    # Define the URL for the config endpoint
-    $url = "http://localhost:1234/v1/config"
-
-    # Create the configuration payload
-    $payload = @{
-        n_ctx = $contextLength
-    } | ConvertTo-Json
-
-    # Send the POST request with the configuration payload
-    try {
-        $response = Invoke-RestMethod -Uri $url -Method Post -Body $payload -ContentType "application/json"
-        Write-Host "Context length set successfully."
-    } catch {
-        Write-Host "Failed to set context length: $_"
-    }
-}

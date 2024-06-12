@@ -105,12 +105,12 @@ function Generate-Response {
     param (
         [string]$message,
         [string]$lm_studio_endpoint,
-        [string]$model_name,
+        [string]$text_model_name,
         [int]$maxRetries = 3
     )
 
     $payload = @{
-        model = $model_name
+        model = $text_model_name
         messages = @(@{ role = "user"; content = $message })
     } | ConvertTo-Json
 
@@ -157,8 +157,16 @@ function Create-Prompt {
                                -replace '\{scenario_location\}', $config.scenario_location `
                                -replace '\{human_current\}', $response.human_current `
                                -replace '\{recent_events\}', $response.recent_events
+
+    $promptLength = $prompt.Length
+    $tokensNeeded = [math]::Ceiling($promptLength * 1.25)
+    $contextUsed = $tokensNeeded * $config.context_factor
+
+    Set-ContextLength -contextLength $contextUsed
+
     return $prompt
 }
+
 
 # Handle events and history prompt.
 function Handle-Prompt {
@@ -186,7 +194,7 @@ function Handle-Prompt {
 
     $prompt = $prompt -replace "\\n", "`n"
 
-    $model_response = Generate-Response -message $prompt -lm_studio_endpoint $config.lm_studio_endpoint -model_name $config.model_name
+    $model_response = Generate-Response -message $prompt -lm_studio_endpoint $config.lm_studio_endpoint -text_model_name $config.text_model_name
 
     if ($model_response -eq "No response from model!") {
         return "No response from model!"
@@ -242,4 +250,26 @@ function Filter-Response {
     }
 
     return $filtered_response
+}
+
+function Set-ContextLength {
+    param (
+        [int]$contextLength
+    )
+
+    # Define the URL for the config endpoint
+    $url = "http://localhost:1234/v1/config"
+
+    # Create the configuration payload
+    $payload = @{
+        n_ctx = $contextLength
+    } | ConvertTo-Json
+
+    # Send the POST request with the configuration payload
+    try {
+        $response = Invoke-RestMethod -Uri $url -Method Post -Body $payload -ContentType "application/json"
+        Write-Host "Context length set to $contextLength tokens successfully."
+    } catch {
+        Write-Host "Failed to set context length: $_"
+    }
 }
