@@ -75,33 +75,6 @@ Payload: {
 ...etc...
 
 ```
-- The Model Menu...
-```
-
-========================================================
-
-
-
-
-
-
-                    Config Model Menu
-                    -----------------
-
-                 1. Select Model
-
-                 2. Context Length (1024)
-
-
-
-
-
-
-========================================================
-
-Select; Choose Options = 1-2, Back to Menu = B:
-
-```
 
 ## REQUIREMENTS:
 - Powershell Core 7, may specify 7.5 later, 7.5 is interesting..  
