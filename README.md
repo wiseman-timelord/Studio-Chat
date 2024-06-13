@@ -4,7 +4,9 @@ Release version is working. Powershell-Core Multi-Window Chatbot with LM Studio 
 ### DEVELOPMENT NOTES..
 -  Currently working towards version 1, the current work is...
 1. More direct method of window communication instead of tcp. It is not possible to communicate through window title, that would have been simplest. Have completed conversion to named pipe, however, conversion took 2 sessions, and so I wasnt able to quickly go through all the functions and assess them, like I normally can if it were done in a single session. I am working through the second of the issues, possibly more to come.
+2. Consolidation functions require to be separated into individual functions for, "recent_events" and "session_history", so that they update on the screen individually.
 2. When Starting the app, I am seeing some kind of error, the error is because certain things are not initialized yet, so, something is being called before its ready, everything else works, just need to isolate the instance and delete the call. Make a quick fix, like we did with the other one, start with 0, print message, put to 1, when 1 do function.
+
 - Done for next release....
 1. Nothing yet.
 - After completion of v1.0, then possibly...
