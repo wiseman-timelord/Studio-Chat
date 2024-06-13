@@ -2,6 +2,7 @@
 Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hosted model(s). 
 
 ### DEVELOPMENT NOTES..
+1. use named pipe instead of tcp for communication between windows. It is not possible to communicate through window title.
 2. When Starting the app, I am seeing some kind of error, the error is because certain things are not initialized yet, so, something is being called before its ready, everything else works, just need to isolate the instance and delete the call. Make a quick fix, like we did with the other one, start with 0, print message, put to 1, when 1 do function.
 - Done for next release....
 1. Nothing yet.
