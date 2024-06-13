@@ -8,14 +8,18 @@ Working, not finished. Powershell-Core Multi-Window Chatbot with LM Studio hoste
 - Done for next release....
 1. Nothing yet.
 - After completion of v1.0, then possibly...
+1. 1 Window for Random Static Text Map Generation, with 4 biomes the user will be able to roam to the limits of the map, there will be a NPC randomly located on the map, and the user will visit them to initiate the phase of roleplaying. 
+2.  4 Roaming NPCs, where the characters will be Enumerated from name list file, also containing a gender assigned to each name, out of 3 possible genders. There will be less details in the user configuration page.
+3. As no AI NPC config there, hence possibly an additional detail in the configuration page, assigning gender, and add gender to the wordlists, this would be inserted into the converse.txt, as well as possibly another detail, how someone would describe their character in 2 words, for example, 'grumpy recluse'.
 1. Some kind of model for Image Generation, then use playground mode on LM Studio, then add a new graphical window taking up quarter screen for Graphics output, this should be based on "recent_events". Possibly when the player selects exit, then it would generate a final image from session history, and display it to the player as the program shuts down other windows, then close itself?? Maybe save scenario picture option? dunno. Either way it would require removal of the history in the display.
 1. In theory, there could be some kind of text generated world map in a new window taking up a quarter of the screen, the player will there have options of locations to go to, the npc could be randomised based on the theme of the location, the user can at any point travel elsewhere, to meet a different person at the other location, or even at most of the locations there would be no people, so as for the user to have to search around for people. 
 3. In theory, scenario_history would be able to be consolidated into "total_history" for all locations in the gaming session, and total_history could be used to customize future scenarios, so that they are themed towards what the player wants to find, hence the game could adapt towards what kinds of, scenarios and characters, preferred by the player, therein creating a theme of world, maybe, these themes could be saved or persistent until new game, enabling a continue option if there is history for it?? 
 4. In theory, The player could also enter physical details, like, height and body type and gender, and this could influence the scenarios, logically requiring the, height and body type and gender, to be generated for the NPCs, and this could be considered in the prompt sent to the model for interaction. Possibly the ai could also psychologically analyze the total_history, and come up with a character sheet for the player, in addition to the pre-defined, height and body type and gender and name. 
 
 ## FEATURES:
-- 2 Windows, Engine and Chat, snapping to each corner of the screen on launch.
-- 1 Window to come...Image Generation based on "recent_events", ie previous actions.
+- 4 Window, Engine and Map and Chat, snapping to each corner of the screen on launch.
+- 1 Window to come...text map generation, multiple text roaming characters.
+- 1 Window 
 - Multi-OS Mac/Linux/Windows compatibility thanks to, PS Core and LM Studio.
 - GPU/CPU interference, and many other great features due to LM Studio.
 - Dynamic context length (prompt chars * 1.25 token per char * 2 = context length).
