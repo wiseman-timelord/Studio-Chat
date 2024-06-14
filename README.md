@@ -3,17 +3,15 @@ Release version is working. Powershell-Core Multi-Window Chatbot with LM Studio 
 
 ### DEVELOPMENT NOTES..
 -  Currently working towards version 1, the current work is...
-1. No current work, spend 3 days going round in circles, and have run out of time. Version 1 will have to wait.
+1. No current work, spend 3 days going round in circles, and have run out of time, I have other priorities. Version 1 will have to wait.
 
 ## FEATURES:
-- 4 Window, Engine and Map and Chat, snapping to each corner of the screen on launch.
-- 1 Window to come...text map generation, multiple text roaming characters.
-- 1 Window 
+- 2 Window, Engine and Chat, snapping to corners of the screen on launch.
 - Multi-OS Mac/Linux/Windows compatibility thanks to, PS Core and LM Studio.
 - GPU/CPU interference, and many other great features due to LM Studio.
 - Dynamic context length (prompt chars * 1.25 token per char * 2 = context length).
 - Designed for and tested on, models, Qwen2 and Llama3, 7/8B @ Q6 in GGUF.
-- IDK TBA
+- More coming see development.
 
 ### PREVIEW:
 - The Chat Window...
