@@ -81,8 +81,7 @@ Payload: {
 - This project is intended a better version of the llama 2 style chatbot I made for WSL, for proof of a AI on powershell/lm studio concept; but when its done, do I make a, adventure game or agent/assitant or personal manager, out of it, what is the next stage after project completion??
 
 ### ARCHIVED DEVELOPMENT:
-1. its no longer a chatbot and becoming a game, renaming project to StudioAdventure or something, this will happen either, at version 1 or when map is implemented or when I make my other project which will become StudioChat instead...
-2. Consolidation functions require to be separated into individual functions for, "recent_events" and "session_history", so that they update on the screen individually, either that or merged with the function for processing converse, and add lines to, save to the key and redraw the menu, after each one within the function.  
+1. Consolidation functions require to be separated into individual functions for, "recent_events" and "session_history", so that they update on the screen individually, either that or merged with the function for processing converse, and add lines to, save to the key and redraw the menu, after each one within the function.  
 2. When Starting the app, I am seeing some kind of error, the error is because certain things are not initialized yet, so, something is being called before its ready, everything else works, just need to isolate the instance and delete the call. Make a quick fix, like we did with the other one, start with 0, print message, put to 1, when 1 do function.
 - Not doing for next release...
 1. named pipe communication was a 2 day AI programming hell, and it ended up a complete waste of time, even with extensive test scripts. I have run xp anti-spy and oo-shutup, or some other thing, so?!?! maybe I broke named pipes is a factor. We are sticking with tcp!
