@@ -1,4 +1,4 @@
-# StudioChat
+# Studio-Chat
 Release version is working. Powershell-Core Multi-Window Chatbot with LM Studio hosted model(s). 
 
 ### DEVELOPMENT NOTES..
