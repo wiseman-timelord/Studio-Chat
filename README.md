@@ -3,7 +3,7 @@ Release version is working. Powershell-Core Multi-Window Chatbot with LM Studio 
 
 ### DEVELOPMENT NOTES..
 -  Currently working towards version 1, the current work is...
-1. Can now be investigated with Claude_Sonnet/DeepSeekv2.5. (spend 3 days going round in circles, and have run out of time, it was unable to produce any significant working update).
+1. Can now be investigated with Claude_Sonnet/DeepSeekv2.5. (spend 3 days going round in circles, and have run out of time, it was unable to produce any significant working update). Also my talents have improved.
 
 ## FEATURES:
 - 2 Window, Engine and Chat, snapping to corners of the screen on launch.
