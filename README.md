@@ -4,6 +4,11 @@ Release version is working. Powershell-Core Multi-Window Chatbot with LM Studio 
 ### DEVELOPMENT NOTES..
 -  Currently working towards version 1, the current work is...
 1. Can now be investigated with Claude_Sonnet/DeepSeekv2.5. (spend 3 days going round in circles, and have run out of time, it was unable to produce any significant working update). Also my talents have improved.
+2. I decided to...
+```
+A roleplaying AI software that integrates a Gradio interface for the main chat interaction and a PowerShell engine window for handling text menus and model processing. The Gradio interface features a 2x2 grid layout with a row for user input, while the engine window switches between "engine mode" for processing models and "menus mode" for displaying text menus. The engine window also displays a waiting message enabling the user to return to the menu, when no processing of responses/recent interactions/scenario/history cycle is going on. The program uses a TCP server to facilitate communication between the Gradio interface and the engine window, ensuring seamless interaction and log message handling.
+```
+
 
 ## FEATURES:
 - 2 Window, Engine and Chat, snapping to corners of the screen on launch.
