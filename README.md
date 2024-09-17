@@ -1,5 +1,5 @@
-# Studio-Chat
-Release version is working. Powershell-Core Multi-Window Chatbot with LM Studio hosted model(s). 
+# Studio-Chat - 
+Status: Working. Release version is working for old version, README.md shown is for, development and new better version. 
 
 ### DEVELOPMENT NOTES..
 - DeepSeek v2.5 is able to take the full load of the scripts, and produce descriptions such as shown below.
@@ -9,7 +9,8 @@ A roleplaying AI software that integrates a Gradio interface for the main chat i
 ```
 
 ### DESCRIPTION:
-Studio-Chat is a roleplaying AI software that leverages LM Studio for generating responses in a roleplaying scenario. The software is designed to be user-friendly, with a Gradio web interface for user interaction and a Python text window for engine operations. The system includes functions for configuring the window, managing configurations, generating and filtering responses, and handling TCP communication. The software aims to provide an immersive roleplaying experience while remaining manageable in terms of size and complexity for AI programming improvements.
+- Powershell-Core Multi-Window Chatbot with LM Studio hosted model(s). 
+- Studio-Chat is a roleplaying AI software that leverages LM Studio for generating responses in a roleplaying scenario. The software is designed to be user-friendly, with a Gradio web interface for user interaction and a Python text window for engine operations. The system includes functions for configuring the window, managing configurations, generating and filtering responses, and handling TCP communication. The software aims to provide an immersive roleplaying experience while remaining manageable in terms of size and complexity for AI programming improvements.
 
 ## FEATURES:
 - 2 Window, Engine and Chat, snapping to corners of the screen on launch.
