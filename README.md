@@ -9,16 +9,19 @@ A roleplaying AI software that integrates a Gradio interface for the main chat i
 ```
 
 ### DESCRIPTION:
-- Powershell-Core Multi-Window Chatbot with LM Studio hosted model(s). 
-- Studio-Chat is a roleplaying AI software that leverages LM Studio for generating responses in a roleplaying scenario. The software is designed to be user-friendly, with a Gradio web interface for user interaction and a Python text window for engine operations. The system includes functions for configuring the window, managing configurations, generating and filtering responses, and handling TCP communication. The software aims to provide an immersive roleplaying experience while remaining manageable in terms of size and complexity for AI programming improvements.
+- Powershell-Core Multi-Window Chatbot with LM Studio hosted model(s). A roleplaying AI software that leverages LM Studio for generating responses in a roleplaying scenario. The software is designed to be user-friendly, with a Gradio web interface for user interaction and a Python text window for engine operations. The system includes functions for configuring the window, managing configurations, generating and filtering responses, and handling TCP communication. The software aims to provide an immersive roleplaying experience while remaining manageable in terms of size and complexity for AI programming improvements.
 
 ## FEATURES:
-- 2 Window, Engine and Chat, snapping to corners of the screen on launch.
-- Multi-OS Mac/Linux/Windows compatibility thanks to, PS Core and LM Studio.
-- GPU/CPU interference, and many other great features due to LM Studio.
-- Dynamic context length (prompt chars * 1.25 token per char * 2 = context length).
-- Designed for and tested on, models, Qwen2 and Llama3, 7/8B @ Q6 in GGUF.
-- More coming see development.
+- **Gradio Interface**: The Roleplaying WebUi with Gradio in a self-terminating sub-process.
+- **LM Studio Interaction**: Generates and filters responses using LM Studio.
+- **Chat and Consolidation Handling**: Manages chat messages and consolidates responses.
+- **Configuration Management**: Loads and applies configuration settings.
+- **Main Menu and Color Themes**: Displays the main menu and applies selected color themes.
+- **Batch Launcher**: Gracefully handles missing `pwsh` or `powershell` executables.
+- **Log and Error, Handling**: Handles log and error, messages to `.\errors.log`.
+
+### Summary
+This concise list highlights the core functionalities of the StudioChat software, including initialization, error handling, configuration, TCP communication, LM Studio interaction, user interface management, and Gradio integration.
 
 ### PREVIEW:
 - The Chat Window...
