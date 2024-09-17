@@ -2,24 +2,21 @@
 
 :: Initialization
 @echo off
-
-:: Initialization
-title StudioChat Launcher
-cd /d %~dp0
-echo ========================================================================================================================
-echo     Studio-Chat
-echo ========================================================================================================================
 color 80
+title Studio-Chat Launcher
+cd /d %~dp0
+
+:: Draw Banner and Begin
+echo ========================================================================================================================
+echo     Studio-Chat Batch Launcher
+echo ========================================================================================================================
 echo.
 echo Batch Initialized.
-echo.
-timeout /t 2 /nobreak >nul
+timeout /t 1 /nobreak >nul
 
 :: Launch Program
 echo Running StudioChat..
 timeout /t 1 /nobreak >nul
-
-:: Try running with pwsh
 pwsh -NoExit -File .\launch_engine.ps1
 if %errorlevel% neq 0 (
     echo Missing File: pwsh.exe
@@ -34,8 +31,8 @@ if %errorlevel% neq 0 (
         goto :Exit
     )
 )
-
-echo ..StudioChat Executed.
+echo ..StudioChat Exited.
+timeout /t 2 /nobreak >nul
 goto Exit
 
 :: Exit Launcher

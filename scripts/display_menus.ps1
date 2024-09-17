@@ -1,4 +1,4 @@
-# `.\scripts\interact_model.ps1` - Interactions with LM Studio
+# `.\scripts\display_menus.ps1` - Menus and python interface (not gradio)
 
 # Request Response (chat window)
 function Update-ModelResponse {
@@ -26,26 +26,32 @@ function Show-MainMenu {
 
     while ($true) {
         Clear-Host
-        Write-Host "================================================================================================================"
+        Write-Host $("".PadLeft(120, "="))
         Write-Host "                     Main Menu"
-        Write-Host "================================================================================================================"
-        Write-Host "1. Start Roleplaying"
-        Write-Host "2. Configure Settings"
-        Write-Host "3. Exit"
-        Write-Host "----------------------------------------------------------------------------------------------------------------"
-        Write-Host "Select an option by number:"
-
-        $selectedOption = Read-Host
+        Write-Host $("".PadLeft(120, "="))
+        Write-Host "`n`n`n`n`n`n`n"
+		Write-Host "    1. Start Roleplaying`n"
+        Write-Host "    2. Configure Roleplaying`n"
+        Write-Host "    3. Configure Libraries`n"
+        Write-Host "    4. Configure Colors"
+        Write-Host "`n`n`n`n`n`n`n"
+		Write-Host $("".PadLeft(120, "-"))
+        $selectedOption = Read-Host -Prompt "Selection; Menu Options = 1-2, Exit Studio-Chat = X: "
 
         switch ($selectedOption) {
             "1" {
                 return $true
             }
             "2" {
-                # Implement settings configuration logic here
-                Write-Host "Settings configured."
+                Show-RoleplayingSettingsMenu -config $config
+			}	
+			"3" {
+                Show-LibrarySettingsMenu -config $config
             }
-            "3" {
+            "4" {
+                Show-ColorThemeMenu -config $config
+            }
+            "x" {
                 return $false
             }
             default {
@@ -56,7 +62,101 @@ function Show-MainMenu {
     }
 }
 
-# Function to display color theme menu and apply selected theme
+
+# Show Roleplaying Menu
+function Show-RoleplayingSettingsMenu {
+    param (
+        [hashtable]$config
+    )
+
+    while ($true) {
+        Clear-Host
+        Write-Host $("".PadLeft(120, "="))
+        Write-Host "                     Roleplaying Settings"
+        Write-Host $("".PadLeft(120, "="))
+        Write-Host "`n`n`n`n`n`n`n"
+		Write-Host "    1. Scenario Location:"
+		Write-Host "        `($($config.scenario_location)`)"
+        Write-Host "    2. AI NPC Name:"
+		Write-Host "        `($($config.ai_npc_name)`)"
+        Write-Host "    3. Human Name:"
+		Write-Host "        `($($config.human_name)`)"
+        Write-Host "`n`n`n`n`n`n`n"
+		Write-Host $("".PadLeft(120, "-"))
+        $selectedOption = Read-Host -Prompt "Selection; Menu Options = 1-3, Navigate Back = B: "
+
+        switch ($selectedOption) {
+            "1" {
+                $config.scenario_location = Read-Host "Enter new Scenario Location"
+            }
+            "2" {
+                $config.ai_npc_name = Read-Host "Enter new AI NPC Name"
+            }
+            "3" {
+                $config.human_name = Read-Host "Enter new Human Name"
+            }
+            "b" {
+                Save-Configuration -config $config
+                return
+            }
+            default {
+                Write-Host "Invalid selection. Please try again."
+                Start-Sleep -Seconds 2
+            }
+        }
+    }
+}
+
+# Function to show the library settings menu
+function Show-LibrarySettingsMenu {
+    param (
+        [hashtable]$config
+    )
+
+    while ($true) {
+        Clear-Host
+        Write-Host $("".PadLeft(120, "="))
+        Write-Host "                     Library Settings"
+        Write-Host $("".PadLeft(120, "="))
+        Write-Host "`n`n`n`n`n`n`n"
+		Write-Host "    1. LM Studio Endpoint: $($config.lm_studio_endpoint)"
+        Write-Host "    2. LM Studio Communication Port: $($config.comm_port_lmstudio)"
+        Write-Host "    3. Max Context Length: $($config.context_factor)"
+		Write-Host "    4. Gradio Endpoint: $($config.gradio_endpoint)"
+        Write-Host "    5. Gradio Communication Port: $($config.comm_port_gradio)"
+        Write-Host "`n`n`n`n`n`n`n"
+		Write-Host $("".PadLeft(120, "-"))
+        $selectedOption = Read-Host -Prompt "Selection; Menu Options = 1-5, Navigate Back = B: "
+
+        switch ($selectedOption) {
+            "1" {
+                $config.lm_studio_endpoint = Read-Host "Enter new LM Studio Endpoint"
+            }
+            "2" {
+                $config.comm_port_lmstudio = Read-Host "Enter new LM Studio Communication Port"
+            }
+            "3" {
+                $config.context_factor = Read-Host "Enter Model Max Context Length"
+            }
+            "4" {
+                $config.gradio_endpoint = Read-Host "Enter new Gradio Endpoint"
+            }
+            "5" {
+                $config.comm_port_gradio = Read-Host "Enter new Gradio Communication Port"
+            }
+            "b" {
+                Save-Configuration -config $config
+                return
+            }
+            default {
+                Write-Host "Invalid selection. Please try again."
+                Start-Sleep -Seconds 2
+            }
+        }
+    }
+}
+
+# Display Color Scheme Menu
 function Show-ColorThemeMenu {
     param (
         [hashtable]$config
@@ -71,25 +171,29 @@ function Show-ColorThemeMenu {
 
     while ($true) {
         Clear-Host
-        Write-Host "================================================================================================================"
-        Write-Host "                     Color Theme Menu"
-        Write-Host "================================================================================================================"
-        Write-Host "1. SolarizedDark"
-        Write-Host "2. GruvboxDark"
-        Write-Host "3. Monokai"
-        Write-Host "4. DarkGreyWhite"
-        Write-Host "----------------------------------------------------------------------------------------------------------------"
-        Write-Host "Select a color theme by number, Back to Menu = B:"
+        Write-Host $("".PadLeft(120, "="))
+        Write-Host "                     Color Scheme Menu"
+        Write-Host $("".PadLeft(120, "="))
+        Write-Host "`n`n`n`n`n`n`n"
+		Write-Host "    1. SolarizedDark"
+        Write-Host "    2. GruvboxDark"
+        Write-Host "    3. Monokai"
+        Write-Host "    4. DarkGreyWhite"
+        Write-Host "`n`n`n`n`n`n`n"
+		Write-Host $("".PadLeft(120, "-"))
+        $selectedThemeKey = Read-Host -Prompt "Selection; Menu Options = 1-4, Navigate Back = B: "
 
-        $selectedThemeKey = Read-Host
-
-        if ($selectedThemeKey -eq "B") {
-            return $false
+        if ($selectedThemeKey -eq "b") {
+            return
         }
 
-        if ($colorThemes.ContainsKey($selectedThemeKey)) {
-            Apply-ColorTheme -theme $colorThemes[$selectedThemeKey]
-            return $true
+        if ($colorThemes.ContainsKey([int]$selectedThemeKey)) {
+            Apply-ColorTheme -theme $colorThemes[[int]$selectedThemeKey]
+            $config.color_theme = $colorThemes[[int]$selectedThemeKey]
+            # Save the updated config here
+            # Manage-Configuration -action "save" -configPath ".\data\config_general.json" -config $config
+            Write-Host "Color Scheme Updated: $($colorThemes[[int]$selectedThemeKey])"
+            Start-Sleep -Seconds 2
         } else {
             Write-Host "Invalid selection. Please try again."
             Start-Sleep -Seconds 2
@@ -103,28 +207,29 @@ function Apply-ColorTheme {
         [string]$theme
     )
 
-    # Apply the selected theme
     switch ($theme) {
         "SolarizedDark" {
-            # Apply SolarizedDark theme settings
-            # Example: Set-ConsoleColor -ForegroundColor DarkBlue -BackgroundColor White
+            $host.UI.RawUI.BackgroundColor = "DarkBlue"
+            $host.UI.RawUI.ForegroundColor = "White"
         }
         "GruvboxDark" {
-            # Apply GruvboxDark theme settings
-            # Example: Set-ConsoleColor -ForegroundColor DarkGreen -BackgroundColor Black
+            $host.UI.RawUI.BackgroundColor = "Black"
+            $host.UI.RawUI.ForegroundColor = "DarkGreen"
         }
         "Monokai" {
-            # Apply Monokai theme settings
-            # Example: Set-ConsoleColor -ForegroundColor Magenta -BackgroundColor DarkGray
+            $host.UI.RawUI.BackgroundColor = "DarkGray"
+            $host.UI.RawUI.ForegroundColor = "Magenta"
         }
         "DarkGreyWhite" {
-            # Apply DarkGreyWhite theme settings
-            # Example: Set-ConsoleColor -ForegroundColor White -BackgroundColor DarkGray
+            $host.UI.RawUI.BackgroundColor = "DarkGray"
+            $host.UI.RawUI.ForegroundColor = "White"
         }
         default {
             Write-Host "Invalid theme selected."
         }
     }
+
+    Clear-Host
 }
 
 # Request Consolidate (Chat Window)

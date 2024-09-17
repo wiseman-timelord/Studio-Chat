@@ -1,30 +1,21 @@
 # `.\scripts\interact_model.ps1` - Interactions with LM Studio
 
-# Function to configure and manage the window
-function Configure-Manage-Window {
-    param (
-        [string]$Action,
-        [string]$windowTitle,
-        [string]$BottomLeft
-    )
-
-    switch ($Action) {
-        "configure" {
-            # Set the window title
-            $host.UI.RawUI.WindowTitle = $windowTitle
-
-            # Set the window position to bottom left
-            if ($BottomLeft -eq "BottomLeft") {
-                $bufferSize = $host.UI.RawUI.BufferSize
-                $windowSize = $host.UI.RawUI.WindowSize
-                $host.UI.RawUI.SetWindowPosition(0, $bufferSize.Height - $windowSize.Height)
-            }
-
-            Write-Host "Window configured with title: $windowTitle"
+# Function to fetch model details from LM Studio
+function Fetch-ModelDetailsLMStudio {
+    $lmstudio_api_url = "http://localhost:1234/v1/models"
+    try {
+        $result = Invoke-RestMethod -Uri $lmstudio_api_url -Method Get
+        if ($result.data -and $result.data.Length -gt 0) {
+            $model_id = $result.data[0].id
+            Write-Host "Model Read: LM Studio - $model_id"
+            return $model_id
+        } else {
+            Write-Host "No models currently loaded in LM Studio."
+            return "No model loaded"
         }
-        default {
-            Write-Host "Invalid action specified."
-        }
+    } catch {
+        Write-Host "Error fetching model details from LM Studio: $_"
+        return "Error fetching model"
     }
 }
 
@@ -79,11 +70,6 @@ function Apply-SavedColorTheme {
 
     # Implement color theme application logic here
     Write-Host "Color theme applied from configuration."
-}
-
-# Function to write dual separator
-function Write-DualSeparator {
-    Write-Host "================================================================================================================"
 }
 
 # Request Response (chat window)

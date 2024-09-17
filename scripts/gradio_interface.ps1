@@ -100,8 +100,11 @@ function Start-GradioApp {
     # Import the Gradio module
     Import-Module -Name ".\scripts\gradio.psm1"
 
-    # Define the Gradio interface
-    $gradio_app = New-GradioApp -Interface $Interface -Title $Title -Layout $Layout -UserInputRow:$UserInputRow
+    # Use the port from the configuration
+    $port = $config.comm_port_gradio
+
+    # Define the Gradio interface with the specified port
+    $gradio_app = New-GradioApp -Interface $Interface -Title $Title -Layout $Layout -UserInputRow:$UserInputRow -Port $port
 
     # Start the Gradio interface in a background job
     $job = Start-ThreadJob -ScriptBlock {
@@ -109,14 +112,15 @@ function Start-GradioApp {
             [scriptblock]$Interface,
             [string]$Title,
             [string]$Layout,
-            [switch]$UserInputRow
+            [switch]$UserInputRow,
+            [int]$Port
         )
 
         # Import the Gradio module
         Import-Module -Name ".\scripts\gradio.psm1"
 
-        # Define the Gradio interface
-        $gradio_app = New-GradioApp -Interface $Interface -Title $Title -Layout $Layout -UserInputRow:$UserInputRow
+        # Define the Gradio interface with the specified port
+        $gradio_app = New-GradioApp -Interface $Interface -Title $Title -Layout $Layout -UserInputRow:$UserInputRow -Port $Port
 
         # Start the Gradio interface
         try {
@@ -127,7 +131,7 @@ function Start-GradioApp {
             Write-Host $errorMessage
             exit 1
         }
-    } -ArgumentList $Interface, $Title, $Layout, $UserInputRow
+    } -ArgumentList $Interface, $Title, $Layout, $UserInputRow, $port
 
     # Register a job event to handle termination
     Register-ObjectEvent -InputObject $job -EventName StateChanged -Action {

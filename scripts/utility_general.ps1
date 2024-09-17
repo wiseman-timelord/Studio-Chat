@@ -1,31 +1,12 @@
 # `.\scripts\interact_model.ps1` - Interactions with LM Studio
 
-# Function to configure and manage the window
+# Function to configure the window title
 function Configure-Manage-Window {
     param (
-        [string]$Action,
-        [string]$windowTitle,
-        [string]$BottomLeft
+        [string]$windowTitle
     )
-
-    switch ($Action) {
-        "configure" {
-            # Set the window title
-            $host.UI.RawUI.WindowTitle = $windowTitle
-
-            # Set the window position to bottom left
-            if ($BottomLeft -eq "BottomLeft") {
-                $bufferSize = $host.UI.RawUI.BufferSize
-                $windowSize = $host.UI.RawUI.WindowSize
-                $host.UI.RawUI.SetWindowPosition(0, $bufferSize.Height - $windowSize.Height)
-            }
-
-            Write-Host "Window configured with title: $windowTitle"
-        }
-        default {
-            Write-Host "Invalid action specified."
-        }
-    }
+    $host.UI.RawUI.WindowTitle = $windowTitle
+    Write-Host "Window configured with title: $windowTitle"
 }
 
 function Apply-ColorTheme {
@@ -59,6 +40,29 @@ function Apply-ColorTheme {
     Clear-Host
 }
 
+# Function to apply saved color theme
+function Apply-SavedColorTheme {
+    param (
+        [hashtable]$config
+    )
+
+    # Implement color theme application logic here
+    Write-Host "Color theme applied from configuration."
+}
+
+
+function ConvertTo-Hashtable {
+    param (
+        [PSCustomObject]$InputObject
+    )
+
+    $hashtable = @{}
+    foreach ($property in $InputObject.PSObject.Properties) {
+        $hashtable[$property.Name] = $property.Value
+    }
+    return $hashtable
+}
+
 # Function to manage configuration
 function Manage-Configuration {
     param (
@@ -71,20 +75,6 @@ function Manage-Configuration {
     return $config
 }
 
-# Function to apply saved color theme
-function Apply-SavedColorTheme {
-    param (
-        [hashtable]$config
-    )
-
-    # Implement color theme application logic here
-    Write-Host "Color theme applied from configuration."
-}
-
-# Function to write dual separator
-function Write-DualSeparator {
-    Write-Host "================================================================================================================"
-}
 
 # Request Response (chat window)
 function Update-ModelResponse {

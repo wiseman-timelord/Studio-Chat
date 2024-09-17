@@ -1,5 +1,6 @@
 # `.\launch_engine.ps1` - script for Launch of Engine.
 
+
 # Imports
 . .\scripts\utility_general.ps1
 . .\scripts\interact_model.ps1
@@ -9,21 +10,24 @@ Start-Sleep -Seconds 1
 # Global flag for log message control
 $global:LogMessagesEnabled = $false
 
-# Configure Window
-Configure-Manage-Window -Action "configure" -windowTitle "StudioChat - Engine Window"
-
 # Load configuration
 $config = Manage-Configuration -action "load" -configPath ".\data\config_general.json"
 
-# Apply saved color theme
+# Convert PSCustomObject to Hashtable
+$config = $config | ConvertTo-Hashtable
+
+# Initialize the display
+$host.UI.RawUI.WindowTitle = "Studio-Chat - Engine Window"
 Apply-SavedColorTheme -config $config
 
 $lm_studio_endpoint = $config.lm_studio_endpoint
-$text_model_name = $config.text_model_name
 $server_port = $config.script_comm_port
 $ai_npc_name = $config.ai_npc_name
 $human_name = $config.human_name
 $scenario_location = $config.scenario_location
+
+# Fetch the current model name from LM Studio
+$text_model_name = Fetch-ModelDetailsLMStudio
 
 # Start TCP server
 $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any, $server_port)
@@ -48,7 +52,6 @@ function Display-WaitingMessage {
 
 # Entry Point
 Start-Sleep -Seconds 1
-Write-DualSeparator
 Write-Host "Engine Initialized."
 $global:LogMessagesEnabled = $true  # Enable log messages after initialization
 Start-Sleep -Seconds 1
