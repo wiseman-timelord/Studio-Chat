@@ -9,6 +9,8 @@ Release version is working. Powershell-Core Multi-Window Chatbot with LM Studio 
 A roleplaying AI software that integrates a Gradio interface for the main chat interaction and a PowerShell engine window for handling text menus and model processing. The Gradio interface features a 2x2 grid layout with a row for user input, while the engine window switches between "engine mode" for processing models and "menus mode" for displaying text menus. The engine window also displays a waiting message enabling the user to return to the menu, when no processing of responses/recent interactions/scenario/history cycle is going on. The program uses a TCP server to facilitate communication between the Gradio interface and the engine window, ensuring seamless interaction and log message handling.
 ```
 
+### DESCRIPTION:
+Studio-Chat is a roleplaying AI software that leverages LM Studio for generating responses in a roleplaying scenario. The software is designed to be user-friendly, with a Gradio web interface for user interaction and a Python text window for engine operations. The system includes functions for configuring the window, managing configurations, generating and filtering responses, and handling TCP communication. The presence of duplicate function definitions across scripts suggests a need for refactoring to avoid redundancy and improve maintainability. The software aims to provide an immersive roleplaying experience while remaining manageable in terms of size and complexity for AI programming improvements.
 
 ## FEATURES:
 - 2 Window, Engine and Chat, snapping to corners of the screen on launch.
