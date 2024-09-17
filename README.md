@@ -24,34 +24,40 @@ A roleplaying AI software that integrates a Gradio interface for the main chat i
 This concise list highlights the core functionalities of the StudioChat software, including initialization, error handling, configuration, TCP communication, LM Studio interaction, user interface management, and Gradio integration.
 
 ### PREVIEW:
-- The Chat Window...
+- The New Main Menu is working...
 ```
-========================================================
+========================================================================================================================
+    Main Menu
+========================================================================================================================
 
-Wanderer:
-Oh, a llama, say, you look like a very wise llama, do you have wise thoughts and do wise things?
 
---------------------------------------------------------
 
-Wise-Llama:
-'"Ah, yes, I do possess wise thoughts and wisdom from the ancient mountains, would you like to hear one"', Wise-Llama asks while nodding thoughtfully and producing a small, intricately carved wooden box from their cloak
 
---------------------------------------------------------
 
-Recent Events:
-Wanderer and Wise-Llama interacted, with the latter being perceived as wise by the former, who was impressed by their thoughtful demeanor and the presentation of a small wooden box from their cloak.
 
---------------------------------------------------------
 
-Scenario History:
-The roleplay started, and then Wanderer and Wise-Llama noticed each other.
 
-========================================================
+    1. Start Roleplaying
 
-Your Input (Back=B, Exit=X):
+    2. Configure Roleplaying
+
+    3. Configure Libraries
+
+    4. Configure Colors
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+Selection; Menu Options = 1-2, Exit Studio-Chat = X: :
+
 
 ```
-- The Engine Window...
+- The Engine Window (old version)...
 ```
 --------------------------------------------------------
 
