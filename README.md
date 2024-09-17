@@ -20,9 +20,6 @@ A roleplaying AI software that integrates a Gradio interface for the main chat i
 - **Batch Launcher**: Gracefully handles missing `pwsh` or `powershell` executables.
 - **Log and Error, Handling**: Handles log and error, messages to `.\errors.log`.
 
-### Summary
-This concise list highlights the core functionalities of the StudioChat software, including initialization, error handling, configuration, TCP communication, LM Studio interaction, user interface management, and Gradio integration.
-
 ### PREVIEW:
 - The New Main Menu is working...
 ```
