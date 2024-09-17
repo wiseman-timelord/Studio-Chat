@@ -1,5 +1,5 @@
 # Studio-Chat - 
-Status: Working. Release version is working for old version, README.md shown is for, development and new better version. 
+Status: Working. Release (old) version is working for no webui; README.md shown is for upcoming version. 
 
 ### DEVELOPMENT NOTES..
 - DeepSeek v2.5 is able to take the full load of the scripts, and produce descriptions such as shown below.
