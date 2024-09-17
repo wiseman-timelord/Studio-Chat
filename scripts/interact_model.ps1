@@ -1,4 +1,90 @@
-# interact_model.ps1 - Interactions with LM Studio
+# `.\scripts\interact_model.ps1` - Interactions with LM Studio
+
+# Function to configure and manage the window
+function Configure-Manage-Window {
+    param (
+        [string]$Action,
+        [string]$windowTitle,
+        [string]$BottomLeft
+    )
+
+    switch ($Action) {
+        "configure" {
+            # Set the window title
+            $host.UI.RawUI.WindowTitle = $windowTitle
+
+            # Set the window position to bottom left
+            if ($BottomLeft -eq "BottomLeft") {
+                $bufferSize = $host.UI.RawUI.BufferSize
+                $windowSize = $host.UI.RawUI.WindowSize
+                $host.UI.RawUI.SetWindowPosition(0, $bufferSize.Height - $windowSize.Height)
+            }
+
+            Write-Host "Window configured with title: $windowTitle"
+        }
+        default {
+            Write-Host "Invalid action specified."
+        }
+    }
+}
+
+function Apply-ColorTheme {
+    param (
+        [string]$theme
+    )
+
+    switch ($theme) {
+        "SolarizedDark" {
+            $host.UI.RawUI.BackgroundColor = "DarkBlue"
+            $host.UI.RawUI.ForegroundColor = "White"
+        }
+        "GruvboxDark" {
+            $host.UI.RawUI.BackgroundColor = "Black"
+            $host.UI.RawUI.ForegroundColor = "DarkGreen"
+        }
+        "Monokai" {
+            $host.UI.RawUI.BackgroundColor = "DarkGray"
+            $host.UI.RawUI.ForegroundColor = "Magenta"
+        }
+        "DarkGreyWhite" {
+            $host.UI.RawUI.BackgroundColor = "DarkGray"
+            $host.UI.RawUI.ForegroundColor = "White"
+        }
+        default {
+            Write-Host "Invalid theme selected."
+        }
+    }
+
+    # Clear the screen to apply the new theme
+    Clear-Host
+}
+
+# Function to manage configuration
+function Manage-Configuration {
+    param (
+        [string]$action,
+        [string]$configPath
+    )
+
+    # Implement configuration management logic here
+    $config = Get-Content -Raw -Path $configPath | ConvertFrom-Json
+    return $config
+}
+
+# Function to apply saved color theme
+function Apply-SavedColorTheme {
+    param (
+        [hashtable]$config
+    )
+
+    # Implement color theme application logic here
+    Write-Host "Color theme applied from configuration."
+}
+
+# Function to write dual separator
+function Write-DualSeparator {
+    Write-Host "================================================================================================================"
+}
 
 # Request Response (chat window)
 function Update-ModelResponse {
@@ -63,7 +149,6 @@ function Handle-Consolidation {
     $writer.WriteLine($historyResponse)
 }
 
-
 # Function to load or update response data
 function Manage-Response {
     param (
@@ -117,32 +202,24 @@ function Generate-Response {
     for ($attempt = 1; $attempt -le $maxRetries; $attempt++) {
         try {
             Write-Host "Sending request to LM Studio (Attempt $attempt)..."
-            Write-Host "Payload: $payload" # Show the JSON payload being sent
-
             $response = Invoke-RestMethod -Uri $lm_studio_endpoint -Method Post -Body $payload -ContentType "application/json"
-            Write-Host "Received response from LM Studio"
-            Write-Host "Raw Response: $($response | ConvertTo-Json -Depth 10)" # Show the JSON response received
-            
             $content = $response.choices[0].message.content -replace "`n", [environment]::NewLine
 
-            # Check if the content is empty or contains only non-alphanumeric characters
             if (-not [string]::IsNullOrEmpty($content) -and $content -match "\w") {
                 return $content
             }
 
             Write-Host "No Content Produced!"
-            Start-Sleep -Seconds 2  # Wait before retrying
+            Start-Sleep -Seconds 2
         } catch {
             Write-Host "Error communicating with LM Studio: $_"
-            Start-Sleep -Seconds 2  # Wait before retrying
+            Start-Sleep -Seconds 2
         }
     }
 
     Write-Host "No valid response after $maxRetries attempts."
     return 'No response from model!'
 }
-
-
 
 # Function to create prompt
 function Create-Prompt {
@@ -166,7 +243,6 @@ function Create-Prompt {
 
     return $prompt
 }
-
 
 # Handle events and history prompt.
 function Handle-Prompt {

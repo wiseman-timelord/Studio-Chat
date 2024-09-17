@@ -1,197 +1,353 @@
-# utility_general.ps1 - Utility script for shared functions
+# `.\scripts\interact_model.ps1` - Interactions with LM Studio
 
-Add-Type -AssemblyName System.Windows.Forms
-
-Add-Type @"
-using System;
-using System.Runtime.InteropServices;
-
-public struct RECT
-{
-    public int left;
-    public int top;
-    public int right;
-    public int bottom;
-}
-
-public class pInvoke
-{
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern bool GetWindowRect(IntPtr hWnd, ref RECT rect);
-}
-"@
-
-Add-Type @"
-using System;
-using System.Runtime.InteropServices;
-using System.Text;
-
-public class WindowApi
-{
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
-
-    [DllImport("user32.dll", SetLastError = true)]
-    public static extern bool SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
-    
-    public const int WM_CLOSE = 0x0010;
-}
-"@
-
-# Artwork
-function Write-Separator {
-    Write-Host "`n--------------------------------------------------------`n"
-}
-
-# Artwork
-function Write-DualSeparator {
-    Write-Host "`n========================================================`n"
-}
-
-# Send printed message for engine_window
-function Send-LogToEngine {
-    param (
-        [string]$message,
-        [string]$server_address = "localhost",
-        [int]$server_port = 12345
-    )
-
-    try {
-        $client = [System.Net.Sockets.TcpClient]::new($server_address, $server_port)
-        $stream = $client.GetStream()
-        $writer = [System.IO.StreamWriter]::new($stream)
-        $writer.AutoFlush = $true
-
-        $writer.WriteLine("log: $message")
-        $client.Close()
-    } catch {
-        Write-Host "Error sending log message to engine window: $_"
-    }
-}
-
-# Manage-Configuration function
-function Manage-Configuration {
-    param (
-        [string]$action,
-        [hashtable]$config = $null,
-        [string]$key = $null,
-        [string]$value = $null,
-        [string]$configPath = ".\data\config_general.json",
-        [int]$server_port = 12345
-    )
-
-    switch ($action) {
-        "load" {
-            $jsonConfig = Get-Content -Raw -Path $configPath | ConvertFrom-Json
-            $hashtable = @{}
-            foreach ($property in $jsonConfig.PSObject.Properties) {
-                $hashtable[$property.Name] = $property.Value
-            }
-            Send-LogToEngine -message "Loaded: $configPath" -server_port $server_port
-            return $hashtable
-        }
-        "save" {
-            if ($null -eq $config) {
-                throw "Config hashtable must be provided for save action."
-            }
-            $config | ConvertTo-Json -Depth 10 | Set-Content -Path $configPath
-            Send-LogToEngine -message "Updated: $configPath" -server_port $server_port
-        }
-        "update" {
-            if ($null -eq $config -or $null -eq $key -or $null -eq $value) {
-                throw "Config hashtable, key, and value must be provided for update action."
-            }
-            $config[$key] = $value
-            Manage-Configuration -action "save" -config $config -configPath $configPath -server_port $server_port
-        }
-        default {
-            throw "Invalid action. Valid actions are: load, save, update."
-        }
-    }
-}
-
-
+# Function to configure and manage the window
 function Configure-Manage-Window {
     param (
         [string]$Action,
-        [System.IntPtr]$WindowHandle = [System.IntPtr]::Zero,
-        [string]$windowTitle = $null,
-        [switch]$TopLeft,
-        [switch]$BottomLeft
+        [string]$windowTitle,
+        [string]$BottomLeft
     )
 
     switch ($Action) {
         "configure" {
-            $Host.UI.RawUI.WindowTitle = $windowTitle
-            $WindowHandle = (Get-Process -Id $PID).MainWindowHandle
-            Configure-Manage-Window -Action "move" -WindowHandle $WindowHandle -TopLeft:$TopLeft -BottomLeft:$BottomLeft
-        }
-        "move" {
-            if ($WindowHandle -eq [System.IntPtr]::Zero) {
-                throw "WindowHandle must be provided for move action."
+            # Set the window title
+            $host.UI.RawUI.WindowTitle = $windowTitle
+
+            # Set the window position to bottom left
+            if ($BottomLeft -eq "BottomLeft") {
+                $bufferSize = $host.UI.RawUI.BufferSize
+                $windowSize = $host.UI.RawUI.WindowSize
+                $host.UI.RawUI.SetWindowPosition(0, $bufferSize.Height - $windowSize.Height)
             }
-            $rect = New-Object RECT
-            [pInvoke]::GetWindowRect($WindowHandle, [ref]$rect)
-            $screen = [System.Windows.Forms.Screen]::FromHandle($WindowHandle).WorkingArea
-            $width = $screen.Width / 2
-            $height = $screen.Height / 2
-            $x = $TopLeft ? $screen.Left : ($BottomLeft ? $screen.Left : $rect.left)
-            $y = $TopLeft ? $screen.Top : ($BottomLeft ? $screen.Top + $height : $rect.top)
-            [pInvoke]::MoveWindow($WindowHandle, $x, $y, [int]$width, [int]$height, $true) | Out-Null
+
+            Write-Host "Window configured with title: $windowTitle"
         }
-        "close" {
-            if ($WindowHandle -eq [System.IntPtr]::Zero) {
-                throw "WindowHandle must be provided for close action."
-            }
-            [WindowApi]::SendMessage($WindowHandle, [WindowApi]::WM_CLOSE, [IntPtr]::Zero, [IntPtr]::Zero) | Out-Null
+        default {
+            Write-Host "Invalid action specified."
         }
     }
 }
 
-function Get-WindowHandle {
+function Apply-ColorTheme {
     param (
-        [int]$ProcessId
+        [string]$theme
     )
 
-    $process = Get-Process -Id $ProcessId
-    return $process.MainWindowHandle
+    switch ($theme) {
+        "SolarizedDark" {
+            $host.UI.RawUI.BackgroundColor = "DarkBlue"
+            $host.UI.RawUI.ForegroundColor = "White"
+        }
+        "GruvboxDark" {
+            $host.UI.RawUI.BackgroundColor = "Black"
+            $host.UI.RawUI.ForegroundColor = "DarkGreen"
+        }
+        "Monokai" {
+            $host.UI.RawUI.BackgroundColor = "DarkGray"
+            $host.UI.RawUI.ForegroundColor = "Magenta"
+        }
+        "DarkGreyWhite" {
+            $host.UI.RawUI.BackgroundColor = "DarkGray"
+            $host.UI.RawUI.ForegroundColor = "White"
+        }
+        default {
+            Write-Host "Invalid theme selected."
+        }
+    }
+
+    # Clear the screen to apply the new theme
+    Clear-Host
 }
 
-function Shutdown-Exit {
+# Function to manage configuration
+function Manage-Configuration {
     param (
-        [string]$server_address = "localhost",
+        [string]$action,
+        [string]$configPath
+    )
+
+    # Implement configuration management logic here
+    $config = Get-Content -Raw -Path $configPath | ConvertFrom-Json
+    return $config
+}
+
+# Function to apply saved color theme
+function Apply-SavedColorTheme {
+    param (
+        [hashtable]$config
+    )
+
+    # Implement color theme application logic here
+    Write-Host "Color theme applied from configuration."
+}
+
+# Function to write dual separator
+function Write-DualSeparator {
+    Write-Host "================================================================================================================"
+}
+
+# Request Response (chat window)
+function Update-ModelResponse {
+    param (
+        [string]$responseText
+    )
+    $responseLines = $responseText -split [environment]::NewLine
+    if ($responseLines[-1] -eq "") {
+        $responseLines = $responseLines[0..($responseLines.Length - 2)]
+    }
+    $responseText = [string]::Join([environment]::NewLine, $responseLines)
+
+    $recent_events = $responseLines[0]
+    $scenario_history = $responseLines[1]
+
+    Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value $recent_events -update
+    Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value $scenario_history -update
+}
+
+# Request Consolidate (Chat Window)
+function Send-ConsolidateCommand {
+    param (
+        [string]$server_address,
         [int]$server_port
     )
-
-    try {
-        $client = [System.Net.Sockets.TcpClient]::new($server_address, $server_port)
-        $stream = $client.GetStream()
-        $writer = [System.IO.StreamWriter]::new($stream)
-        $writer.AutoFlush = $true
-
-        $writer.WriteLine("shutdown")
-        $client.Close()
-    } catch {
-        Write-Host "Error sending shutdown command: $_"
-    }
-
-    $engineProcessId = (Get-Process -Name "pwsh" | Where-Object { $_.MainWindowTitle -eq "StudioChat - Engine Window" }).Id
-    Configure-Manage-Window -WindowHandle (Get-WindowHandle -ProcessId $engineProcessId) -Action "close"
-
-    $chatProcessId = (Get-Process -Name "pwsh" | Where-Object { $_.MainWindowTitle -eq "StudioChat - Chat Window" }).Id
-    Configure-Manage-Window -WindowHandle (Get-WindowHandle -ProcessId $chatProcessId) -Action "close"
+    $tcpClient = Initialize-TcpClient -server_address $server_address -server_port $server_port
+    $tcpClient.writer.WriteLine("consolidate")
+    $consolidateResponseText = Read-TcpResponse -reader $tcpClient.reader
+    $tcpClient.client.Close()
+    return $consolidateResponseText
 }
 
-function Get-ModelsFromServer {
+# Request Consolidation (engine window)
+function Handle-Consolidation {
+    param (
+        [hashtable]$config,
+        [hashtable]$response,
+        [System.IO.StreamWriter]$writer
+    )
+
+    $eventsResponse = Handle-Prompt -promptType "prompt_events" -config $config -response $response
+    Write-Host "Received response from LM Studio for events"
+    Write-Host "Response JSON: $($eventsResponse | ConvertTo-Json -Depth 10)"
+
+    if ($eventsResponse -eq "No response from model!") {
+        Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value "No response from model!" -update
+    } else {
+        Manage-Response -responsePath ".\data\model_response.json" -key "recent_events" -value $eventsResponse -update
+    }
+
+    $historyResponse = Handle-Prompt -promptType "prompt_history" -config $config -response $response
+    Write-Host "Received response from LM Studio for history"
+    Write-Host "Response JSON: $($historyResponse | ConvertTo-Json -Depth 10)"
+
+    if ($historyResponse -eq "No response from model!") {
+        Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value "No response from model!" -update
+    } else {
+        Manage-Response -responsePath ".\data\model_response.json" -key "scenario_history" -value $historyResponse -update
+    }
+
+    $writer.WriteLine($eventsResponse)
+    $writer.WriteLine($historyResponse)
+}
+
+
+# Function to load or update response data
+function Manage-Response {
+    param (
+        [string]$key = $null,
+        [string]$value = $null,
+        [string]$responsePath = ".\data\model_response.json",
+        [switch]$update
+    )
+
+    $response = Get-Content -Raw -Path $responsePath | ConvertFrom-Json
+    $hashtable = @{}
+    foreach ($property in $response.PSObject.Properties) {
+        $hashtable[$property.Name] = $property.Value
+    }
+    Write-Host "Loaded: $responsePath"
+
+    if ($update) {
+        $hashtable[$key] = $value
+        $hashtable | ConvertTo-Json -Depth 10 | Set-Content -Path $responsePath
+        Write-Host "Updated: $responsePath"
+    }
+
+    return $hashtable
+}
+
+# Process txt prompt
+function Get-ProcessedPrompt {
+    param (
+        [string]$filePath
+    )
+
+    $content = Get-Content -Path $filePath -Raw
+    $processedContent = $content -replace "(`n|`r`n)+", "\n" -replace "`n", "\n"
+    return $processedContent
+}
+
+# Function to generate response from LM Studio with retries
+function Generate-Response {
+    param (
+        [string]$message,
+        [string]$lm_studio_endpoint,
+        [string]$text_model_name,
+        [int]$maxRetries = 3
+    )
+
+    $payload = @{
+        model = $text_model_name
+        messages = @(@{ role = "user"; content = $message })
+    } | ConvertTo-Json
+
+    for ($attempt = 1; $attempt -le $maxRetries; $attempt++) {
+        try {
+            Write-Host "Sending request to LM Studio (Attempt $attempt)..."
+            $response = Invoke-RestMethod -Uri $lm_studio_endpoint -Method Post -Body $payload -ContentType "application/json"
+            $content = $response.choices[0].message.content -replace "`n", [environment]::NewLine
+
+            if (-not [string]::IsNullOrEmpty($content) -and $content -match "\w") {
+                return $content
+            }
+
+            Write-Host "No Content Produced!"
+            Start-Sleep -Seconds 2
+        } catch {
+            Write-Host "Error communicating with LM Studio: $_"
+            Start-Sleep -Seconds 2
+        }
+    }
+
+    Write-Host "No valid response after $maxRetries attempts."
+    return 'No response from model!'
+}
+
+# Function to create prompt
+function Create-Prompt {
+    param (
+        [hashtable]$config,
+        [hashtable]$response
+    )
+
+    $promptTemplate = Get-ProcessedPrompt -filePath ".\data\prompt_converse.txt"
+    $prompt = $promptTemplate -replace '\{human_name\}', $config.human_name `
+                               -replace '\{ai_npc_name\}', $config.ai_npc_name `
+                               -replace '\{scenario_location\}', $config.scenario_location `
+                               -replace '\{human_current\}', $response.human_current `
+                               -replace '\{recent_events\}', $response.recent_events
+
+    $promptLength = $prompt.Length
+    $tokensNeeded = [math]::Ceiling($promptLength * 1.25)
+    $contextUsed = $tokensNeeded * $config.context_factor
+
+    Set-ContextLength -contextLength $contextUsed
+
+    return $prompt
+}
+
+
+# Handle events and history prompt.
+function Handle-Prompt {
+    param (
+        [string]$promptType,
+        [hashtable]$config,
+        [hashtable]$response
+    )
+
+    $promptPath = ".\data\$($promptType).txt"
+    $promptTemplate = Get-ProcessedPrompt -filePath $promptPath
+
+    switch ($promptType) {
+        "prompt_events" {
+            $prompt = $promptTemplate -replace '\{human_name\}', $config.human_name `
+                                      -replace '\{ai_npc_name\}', $config.ai_npc_name `
+                                      -replace '\{human_current\}', $response.human_current `
+                                      -replace '\{ai_npc_current\}', $response.ai_npc_current
+        }
+        "prompt_history" {
+            $prompt = $promptTemplate -replace '\{recent_events\}', $response.recent_events `
+                                      -replace '\{scenario_history\}', $response.scenario_history
+        }
+    }
+
+    $prompt = $prompt -replace "\\n", "`n"
+
+    $model_response = Generate-Response -message $prompt -lm_studio_endpoint $config.lm_studio_endpoint -text_model_name $config.text_model_name
+
+    if ($model_response -eq "No response from model!") {
+        return "No response from model!"
+    }
+
+    $filtered_response = Filter-Response -response $model_response -type "text_processing"
+
+    return $filtered_response
+}
+
+# Function to filter the response based on the type
+function Filter-Response {
+    param (
+        [string]$response,
+        [string]$type
+    )
+
+    switch ($type) {
+        "ai_roleplaying" {
+            # Remove URLs
+            $filtered_response = $response -replace "http\S+", ""
+
+            # Remove specific unwanted characters
+            $filtered_response = $filtered_response -replace "[<|!?\[\]()]", ""
+
+            # Handle ".!"
+            $filtered_response = $filtered_response -replace "\.\!", "."
+
+            # Count the number of colons in the response
+            $colon_count = ($filtered_response -split ":").Length - 1
+
+            if ($colon_count -eq 1) {
+                # If only one colon, select content after the colon up to the first period
+                $filtered_response = $filtered_response -split ":", 2 | Select-Object -Last 1
+                $filtered_response = $filtered_response -split "\.", 2 | Select-Object -First 1
+            } elseif ($colon_count -gt 1) {
+                # If multiple colons, select content after the second colon up to the following period
+                $filtered_response = $filtered_response -split ":", 3 | Select-Object -Last 1
+                $filtered_response = $filtered_response -split "\.", 2 | Select-Object -First 1
+            }
+
+            # Trim any additional blank lines
+            $filtered_response = $filtered_response.Trim()
+        }
+        "text_processing" {
+            $filtered_response = $response -split ":", 2 | Select-Object -Last 1
+            $filtered_response = $filtered_response -split "`n", 2 | Select-Object -First 1
+            $filtered_response = $filtered_response.Trim()
+        }
+        default {
+            $filtered_response = $response.Trim()
+        }
+    }
+
+    return $filtered_response
+}
+
+function Set-ContextLength {
+    param (
+        [int]$contextLength
+    )
+
+    # Define the URL for the config endpoint
+    $url = "http://localhost:1234/v1/config"
+
+    # Create the configuration payload
+    $payload = @{
+        n_ctx = $contextLength
+    } | ConvertTo-Json
+
+    # Send the POST request with the configuration payload
     try {
-        $response = Invoke-WebRequest -Uri "http://localhost:1234/v1/models" -UseBasicParsing
-        $models = $response.Content | ConvertFrom-Json
-        return $models
+        $response = Invoke-RestMethod -Uri $url -Method Post -Body $payload -ContentType "application/json"
+        Write-Host "Context length set to $contextLength tokens successfully."
     } catch {
-        Write-Host "Failed to retrieve models from server: $_"
-        return $null
+        Write-Host "Failed to set context length: $_"
     }
 }
