@@ -27,7 +27,7 @@ function Show-MainMenu {
     while ($true) {
         Clear-Host
         Write-Host $("".PadLeft(120, "="))
-        Write-Host "                     Main Menu"
+        Write-Host "    Main Menu"
         Write-Host $("".PadLeft(120, "="))
         Write-Host "`n`n`n`n`n`n`n"
 		Write-Host "    1. Start Roleplaying`n"
@@ -36,7 +36,7 @@ function Show-MainMenu {
         Write-Host "    4. Configure Colors"
         Write-Host "`n`n`n`n`n`n`n"
 		Write-Host $("".PadLeft(120, "-"))
-        $selectedOption = Read-Host -Prompt "Selection; Menu Options = 1-2, Exit Studio-Chat = X: "
+        $selectedOption = Read-Host -Prompt "Selection; Menu Options = 1-4, Exit Studio-Chat = X: "
 
         switch ($selectedOption) {
             "1" {
@@ -72,7 +72,7 @@ function Show-RoleplayingSettingsMenu {
     while ($true) {
         Clear-Host
         Write-Host $("".PadLeft(120, "="))
-        Write-Host "                     Roleplaying Settings"
+        Write-Host "    Roleplaying Settings"
         Write-Host $("".PadLeft(120, "="))
         Write-Host "`n`n`n`n`n`n`n"
 		Write-Host "    1. Scenario Location:"
@@ -116,14 +116,19 @@ function Show-LibrarySettingsMenu {
     while ($true) {
         Clear-Host
         Write-Host $("".PadLeft(120, "="))
-        Write-Host "                     Library Settings"
+        Write-Host "    Library Settings"
         Write-Host $("".PadLeft(120, "="))
         Write-Host "`n`n`n`n`n`n`n"
-		Write-Host "    1. LM Studio Endpoint: $($config.lm_studio_endpoint)"
-        Write-Host "    2. LM Studio Communication Port: $($config.comm_port_lmstudio)"
+		Write-Host "    1. LM Studio Endpoint:"
+		Write-Host "        `($($config.lm_studio_endpoint)`)"
+        Write-Host "    2. LM Studio Communication Port: "
+		Write-Host "        `($($config.comm_port_lmstudio)`)"
         Write-Host "    3. Max Context Length: $($config.context_factor)"
-		Write-Host "    4. Gradio Endpoint: $($config.gradio_endpoint)"
-        Write-Host "    5. Gradio Communication Port: $($config.comm_port_gradio)"
+		Write-Host "        `($($config.context_factor`)"
+		Write-Host "    4. Gradio Endpoint:"
+		Write-Host "        `($($config.gradio_endpoint)`)"
+        Write-Host "    5. Gradio Communication Port:"
+		Write-Host "        `($($config.comm_port_gradio)`)"
         Write-Host "`n`n`n`n`n`n`n"
 		Write-Host $("".PadLeft(120, "-"))
         $selectedOption = Read-Host -Prompt "Selection; Menu Options = 1-5, Navigate Back = B: "
@@ -172,7 +177,7 @@ function Show-ColorThemeMenu {
     while ($true) {
         Clear-Host
         Write-Host $("".PadLeft(120, "="))
-        Write-Host "                     Color Scheme Menu"
+        Write-Host "    Color Scheme Menu"
         Write-Host $("".PadLeft(120, "="))
         Write-Host "`n`n`n`n`n`n`n"
 		Write-Host "    1. SolarizedDark"
