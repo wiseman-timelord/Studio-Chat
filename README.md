@@ -50,7 +50,7 @@ A roleplaying AI software that integrates a Gradio interface for the main chat i
 
 
 ------------------------------------------------------------------------------------------------------------------------
-Selection; Menu Options = 1-2, Exit Studio-Chat = X: :
+Selection; Menu Options = 1-4, Exit Studio-Chat = X: :
 
 
 ```
