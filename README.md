@@ -1,4 +1,4 @@
-# Studio-Chat - 
+# Studio-Chat
 Status: Working. Release (old) version is working for no webui; README.md shown is partly/mostly for upcoming version. 
 
 ### DEVELOPMENT NOTES..
